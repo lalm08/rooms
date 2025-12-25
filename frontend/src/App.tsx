@@ -24,7 +24,11 @@ export default function App() {
   const [newBookingDevice, setNewBookingDevice] = useState("")
   const [newBookingAuditory, setNewBookingAuditory] = useState("")
 
-  const API = "http://localhost/api"
+  let  API: string = "http://localhost/api"
+  if(import.meta.env.PROD)
+  {
+    API = "https://rooms-9z2w.onrender.com"
+  }
 
   useEffect(() => { loadAll() }, [])
 
