@@ -1,4 +1,4 @@
-import { Type as T, Static } from 'typebox'
+import { Type as T, type Static } from 'typebox'
 
 // Devices
 export const Device = T.Object({
