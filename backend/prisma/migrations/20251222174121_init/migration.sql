@@ -1,0 +1,7 @@
+-- AlterTable
+ALTER TABLE "Booking" ADD COLUMN     "datetime" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ADD COLUMN     "roomId" TEXT NOT NULL DEFAULT 'unknown',
+ADD COLUMN     "userId" TEXT NOT NULL DEFAULT 'unknown';
+
+-- AddForeignKey
+ALTER TABLE "Booking" ADD CONSTRAINT "Booking_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
