@@ -27,7 +27,7 @@ export default function App() {
   let  API: string = "http://localhost/api"
   if(import.meta.env.PROD)
   {
-    API = "https://rooms-9z2w.onrender.com"
+    API = "https://rooms-9z2w.onrender.com/api"
   }
 
   useEffect(() => { loadAll() }, [])
