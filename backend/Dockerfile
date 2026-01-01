@@ -9,7 +9,7 @@ WORKDIR /app
 ENV NODE_ENV=development
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npx prisma generate --schema=prisma/schema.prisma
+RUN DATABASE_URL="postgresql://dummy@localhost:5432/db" npx prisma generate --schema=prisma/schema.prisma
 RUN npm run build
 # Оставляем только runtime-зависимости
 RUN npm prune --omit=dev
