@@ -15,12 +15,16 @@ export type CreateDevice = Static<typeof CreateDevice>
 // Auditories
 export const Auditory = T.Object({
   id: T.String(),
-  name: T.String({ minLength: 1 })
+  name: T.String({ minLength: 1 }),
+  capacity: T.Optional(T.Number()),
+  status: T.Optional(T.String())  
 })
 export type Auditory = Static<typeof Auditory>
 
 export const CreateAuditory = T.Object({
-  name: T.String({ minLength: 1 })
+  name: T.String({ minLength: 1 }),
+  capacity: T.Optional(T.Number()),
+  status: T.Optional(T.String())
 })
 export type CreateAuditory = Static<typeof CreateAuditory>
 

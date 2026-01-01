@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
@@ -27,6 +27,8 @@ model Device {
 model Auditory {
   id       String   @id @default(cuid())
   name     String
+  capacity Int?      
+  status   String? 
   bookings Booking[]
 }
 

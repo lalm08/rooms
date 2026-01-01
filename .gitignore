@@ -45,3 +45,4 @@
  .idea/
  *.swp
  *.swo
+node_modules

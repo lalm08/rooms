@@ -10,7 +10,10 @@ export async function buildApp() {
 
   // --- Инфраструктура ---
   await app.register(helmet)
-  await app.register(cors, { origin: true })
+  await app.register(cors, { origin: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
+    allowedHeaders: ['Content-Type', 'Authorization']  
+   })
   await app.register(rateLimit, { max: 100, timeWindow: '1 minute' })
   await app.register(prismaPlugin)
 
@@ -34,17 +37,33 @@ export async function buildApp() {
   })
 
   // --- Auditories ---
-  app.get('/api/auditories', async () => app.prisma.auditory.findMany())
+  //app.get('/api/auditories', async () => app.prisma.auditory.findMany())
+ app.get('/api/auditories', async (req, reply) => {
+  try {
+    const data = await app.prisma.auditory.findMany()
+    return data
+  } catch (error: any) {
+    // ВАЖНО: Это выведет реальную причину в черный терминал бэкенда
+    console.error('!!! ОШИБКА БАЗЫ ДАННЫХ !!!:', error.message) 
+    reply.status(500).send({ error: error.message })
+  }
+})
   app.post('/api/auditories', async (req, reply) => {
-    const { name } = req.body as { name: string }
-    const aud = await app.prisma.auditory.create({ data: { name } })
-    reply.code(201)
-    return aud
+  const { name, capacity, status } = req.body as { name: string; capacity?: number; status?: string }
+  const aud = await app.prisma.auditory.create({ 
+    data: { 
+      name, 
+      capacity: capacity ? Number(capacity) : 0,
+      status: status || 'available' 
+    } 
   })
+  reply.code(201)
+  return aud
+})
   app.put('/api/auditories/:id', async (req, reply) => {
     const { id } = req.params as { id: string }
-    const { name } = req.body as { name: string }
-    return app.prisma.auditory.update({ where: { id }, data: { name } })
+    const { name, capacity, status } = req.body as { name: string; capacity?: number; status?: string }
+    return app.prisma.auditory.update({ where: { id }, data: { name, capacity: capacity ? Number(capacity) : 0, status: status || 'available'  } })
   })
   app.delete('/api/auditories/:id', async (req, reply) => {
     const { id } = req.params as { id: string }
@@ -61,6 +80,19 @@ export async function buildApp() {
     const booking = await app.prisma.booking.create({ data: { deviceId, auditoryId } })
     reply.code(201)
     return booking
+  })
+ app.put('/api/bookings/:id', async (req, reply) => {
+    const { id } = req.params as { id: string }
+    const { deviceId, auditoryId } = req.body as { deviceId: string; auditoryId: string }
+    try {
+      const updated = await app.prisma.booking.update({
+        where: { id },
+        data: { deviceId, auditoryId }
+      })
+      return updated
+    } catch (error: any) {
+      reply.status(500).send({ error: error.message })
+    }
   })
   app.delete('/api/bookings/:id', async (req, reply) => {
     const { id } = req.params as { id: string }
