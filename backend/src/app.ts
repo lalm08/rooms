@@ -1,5 +1,6 @@
 import Fastify from 'fastify'
 import cors from '@fastify/cors'
+//import cors from 'cors-ts'
 import helmet from '@fastify/helmet'
 import rateLimit from '@fastify/rate-limit'
 import prismaPlugin from './plugins/prisma.js'
@@ -10,9 +11,10 @@ export async function buildApp() {
 
   // --- Инфраструктура ---
   await app.register(helmet)
-  await app.register(cors, { origin: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], 
-    allowedHeaders: ['Content-Type', 'Authorization']  
+  await app.register(cors, { 
+    origin: true,
+    methods: ['*'], 
+    allowedHeaders: ['*']  
    })
   await app.register(rateLimit, { max: 100, timeWindow: '1 minute' })
   await app.register(prismaPlugin)
@@ -43,7 +45,6 @@ export async function buildApp() {
     const data = await app.prisma.auditory.findMany()
     return data
   } catch (error: any) {
-    // ВАЖНО: Это выведет реальную причину в черный терминал бэкенда
     console.error('!!! ОШИБКА БАЗЫ ДАННЫХ !!!:', error.message) 
     reply.status(500).send({ error: error.message })
   }
