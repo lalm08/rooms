@@ -33,4 +33,4 @@ COPY --from=build /app/src/generated/prisma ./src/generated/prisma
 
 USER node
 EXPOSE 3000
-CMD ["sh","-c","npx prisma migrate deploy --schema=prisma/schema.prisma && node dist/server.js"]
+CMD ["sh","-c","npx prisma migrate deploy --schema=prisma/schema.prisma && node dist/src/server.js"]
