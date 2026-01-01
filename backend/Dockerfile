@@ -1,4 +1,5 @@
 FROM node:24-alpine AS deps
+RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package*.json ./
 RUN --mount=type=cache,target=/root/.npm \
@@ -22,13 +23,14 @@ COPY . .
 CMD ["sh","-lc","npx prisma generate --schema=prisma/schema.prisma && npx prisma migrate deploy || true; node --loader ts-node/esm src/server.ts"]
 
 FROM node:24-alpine AS prod
+RUN apk add --no-cache openssl libc6-compat
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist         ./dist
 COPY --from=build /app/prisma ./prisma
-COPY --from=build /app/src/generated/prisma ./dist/generated/prisma
+COPY --from=build /app/src/generated/prisma ./src/generated/prisma
 
 USER node
 EXPOSE 3000
-CMD ["sh","-lc","npx prisma migrate deploy --schema=prisma/schema.prisma && node dist/server.js"]
+CMD ["sh","-c","npx prisma migrate deploy --schema=prisma/schema.prisma && node dist/server.js"]

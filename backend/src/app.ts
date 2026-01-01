@@ -15,7 +15,7 @@ export async function buildApp() {
     { contentSecurityPolicy: false }
   )
   await app.register(cors, { 
-    origin: true,
+    origin: ['https://lalm08.github.io'],
     methods: ['*'], 
     allowedHeaders: ['*']  
    })
