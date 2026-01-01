@@ -10,7 +10,10 @@ export async function buildApp() {
   const app = Fastify({ logger: true })
 
   // --- Инфраструктура ---
-  await app.register(helmet)
+  await app.register(
+    helmet, 
+    { contentSecurityPolicy: false }
+  )
   await app.register(cors, { 
     origin: true,
     methods: ['*'], 
