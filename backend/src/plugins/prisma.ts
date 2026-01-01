@@ -20,7 +20,6 @@ export default fp(async (app) => {
     },
   })
 
-  app.decorate('prisma', prisma)
   // decorate делает prisma доступным как app.prisma во всех маршрутах и хукax.
   app.decorate('prisma', prisma)
 
