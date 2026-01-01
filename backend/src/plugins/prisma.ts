@@ -10,7 +10,17 @@ declare module 'fastify' {
 
 // Fastify-плагин, который создаёт один экземпляр PrismaClient и подключает его ко всему приложению.
 export default fp(async (app) => {
-  const prisma = new PrismaClient()
+  // Передаем URL базы данных прямо в конструктор, 
+  // так как Prisma 7 больше не берет его из schema.prisma автоматически
+  const prisma = new PrismaClient({
+    datasources: {
+      db: {
+        url: process.env.DATABASE_URL!,
+      },
+    },
+  })
+
+  app.decorate('prisma', prisma)
   // decorate делает prisma доступным как app.prisma во всех маршрутах и хукax.
   app.decorate('prisma', prisma)
 
