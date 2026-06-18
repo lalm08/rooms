@@ -33,10 +33,12 @@ export async function seedDatabase(prisma: PrismaClient) {
   const existing = await prisma.auditory.findMany()
   if (existing.length > 0) {
     for (const room of existing) {
-      if (!room.code) {
+      const needsCode = !room.code || room.code === room.id
+      if (needsCode) {
+        const code = room.name.replace(/\s+/g, '-').slice(0, 32) || room.id
         await prisma.auditory.update({
           where: { id: room.id },
-          data: { code: room.name.replace(/\s+/g, '-').slice(0, 32) || room.id },
+          data: { code },
         })
       }
     }

@@ -10,6 +10,11 @@ if [ -z "$DATABASE_URL" ]; then
   exit 1
 fi
 
+echo "[rooms-api] Preparing existing database rows..."
+npx prisma db execute --file ./prisma/pre-deploy.sql --schema ./prisma/schema.prisma || {
+  echo "[rooms-api] pre-deploy SQL skipped (fresh database or already migrated)"
+}
+
 echo "[rooms-api] Syncing database schema..."
 npx prisma db push --skip-generate --accept-data-loss
 
