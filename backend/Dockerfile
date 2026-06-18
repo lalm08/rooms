@@ -26,12 +26,13 @@ FROM node:24-alpine AS prod
 RUN apk add --no-cache openssl libc6-compat
 WORKDIR /app
 ENV NODE_ENV=production
+COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/dist         ./dist
 COPY --from=build /app/prisma ./prisma
 COPY --from=build /app/src/generated/prisma ./dist/src/generated/prisma
+COPY scripts/start-prod.sh ./scripts/start-prod.sh
+RUN chmod +x ./scripts/start-prod.sh
 
-USER node
 EXPOSE 3000
-CMD ["sh", "-c", "npx prisma db push && node dist/src/server.js"]
-#CMD ["sh","-c","npx prisma migrate deploy --schema=prisma/schema.prisma && node dist/src/server.js"]
+CMD ["./scripts/start-prod.sh"]

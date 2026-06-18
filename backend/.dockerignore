@@ -1,0 +1,10 @@
+# dependencies
+node_modules
+dist
+.env
+.env.*
+!.env.example
+
+# dev / local
+*.log
+.git

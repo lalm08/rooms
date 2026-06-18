@@ -35,7 +35,14 @@ export async function buildApp() {
   await app.register(rateLimit, { max: 100, timeWindow: '1 minute' })
   await app.register(prismaPlugin)
 
-  await seedDatabase(app.prisma)
+  app.get('/health', async () => ({ ok: true }))
+  app.get('/', async () => ({ service: 'rooms-api', ok: true }))
+
+  try {
+    await seedDatabase(app.prisma)
+  } catch (err) {
+    app.log.error(err, 'Seed skipped due to error')
+  }
 
   // --- Rooms catalog ---
   app.get('/api/rooms', async (req) => {
