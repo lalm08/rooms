@@ -1,0 +1,9 @@
+import { PrismaClient } from '../generated/prisma/index.js';
+declare module 'fastify' {
+    interface FastifyInstance {
+        prisma: PrismaClient;
+    }
+}
+declare const _default: (app: import("fastify").FastifyInstance<import("fastify").RawServerDefault, import("http").IncomingMessage, import("http").ServerResponse<import("http").IncomingMessage>, import("fastify").FastifyBaseLogger, import("fastify").FastifyTypeProviderDefault>) => Promise<void>;
+export default _default;
+//# sourceMappingURL=prisma.d.ts.map

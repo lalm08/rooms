@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import {
   Paper, Table, TableHead, TableRow, TableCell, TableBody,
-  Chip, CircularProgress, Box, IconButton, Stack, Typography
+  Chip, CircularProgress, Box, IconButton, Stack, Typography,
+  TablePagination,
 } from "@mui/material";
 import { VisibilityOutlined, EditOutlined, DeleteOutline, Groups2Outlined } from "@mui/icons-material";
-import { fetchRooms, type RoomDto } from "@/api/roomsApi";
+import { fetchRooms, type RoomDto, type RoomsFilters } from "@/api/roomsApi";
+import { roomsPayload } from "@/mocks/data";
 
 const STATUS_LABEL: Record<RoomDto["status"], string> = {
   available: "Доступна",
@@ -21,29 +23,47 @@ const EQUIP_LABEL: Record<string, string> = {
   computers: "Компьютеры", board: "Доска",
 };
 
-export function RoomsTable() {
+type Props = {
+  filters: RoomsFilters;
+};
+
+export function RoomsTable({ filters }: Props) {
   const [loading, setLoading] = useState(true);
-  const [error, setError]     = useState<string | null>(null);
-  const [items, setItems]     = useState<RoomDto[]>([]);
+  const [items, setItems] = useState<RoomDto[]>([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    setPage(0);
+  }, [filters]);
 
   useEffect(() => {
     let mounted = true;
     (async () => {
       try {
         setLoading(true);
-        const data = await fetchRooms(1);
-        if (mounted) setItems(data.items);
+        const data = await fetchRooms(page + 1, filters, rowsPerPage);
+        if (mounted) {
+          setItems(data.items);
+          setTotal(data.total);
+        }
       } catch (e) {
-        if (mounted) setError((e as Error).message || "Ошибка загрузки");
+        if (mounted) {
+          console.warn("API /rooms недоступен, используем демо-данные:", e);
+          setItems(roomsPayload.items);
+          setTotal(roomsPayload.total);
+        }
       } finally {
         if (mounted) setLoading(false);
       }
     })();
     return () => { mounted = false; };
-  }, []);
+  }, [filters, page, rowsPerPage]);
 
-  if (loading) return <Box sx={{ p: 3, display: "grid", placeItems: "center" }}><CircularProgress /></Box>;
-  if (error)   return <Box sx={{ p: 3 }}><Typography color="error">Не удалось загрузить данные: {error}</Typography></Box>;
+  if (loading && items.length === 0) {
+    return <Box sx={{ p: 3, display: "grid", placeItems: "center" }}><CircularProgress /></Box>;
+  }
 
   return (
     <Paper elevation={0} sx={{ borderRadius: 2, overflow: "hidden", border: "1px solid #eef0f3" }}>
@@ -52,20 +72,34 @@ export function RoomsTable() {
           <TableRow>
             <TableCell width={100}>Номер</TableCell>
             <TableCell>Название</TableCell>
-            <TableCell width={160} align="right">Вместимость</TableCell>
+            <TableCell width={160}>Расположение</TableCell>
+            <TableCell width={120} align="right">Вместимость</TableCell>
             <TableCell>Оборудование</TableCell>
             <TableCell width={170}>Статус</TableCell>
             <TableCell width={120} align="center">Действия</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {items.map((r) => (
+          {items.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={7} align="center" sx={{ py: 4, color: "text.secondary" }}>
+                Аудитории не найдены
+              </TableCell>
+            </TableRow>
+          ) : items.map((r) => (
             <TableRow key={r.id} hover>
               <TableCell sx={{ color: "text.secondary" }}>{r.code}</TableCell>
               <TableCell>
                 <Stack spacing={0.5}>
                   <Typography fontWeight={600}>{r.name}</Typography>
+                  {r.description && (
+                    <Typography variant="caption" color="text.secondary">{r.description}</Typography>
+                  )}
                 </Stack>
+              </TableCell>
+              <TableCell>
+                <Typography variant="body2">{r.building}</Typography>
+                <Typography variant="caption" color="text.secondary">{r.floor} этаж</Typography>
               </TableCell>
               <TableCell align="right">
                 <Stack direction="row" spacing={1} justifyContent="flex-end" alignItems="center">
@@ -95,6 +129,19 @@ export function RoomsTable() {
           ))}
         </TableBody>
       </Table>
+      <TablePagination
+        component="div"
+        count={total}
+        page={page}
+        onPageChange={(_, p) => setPage(p)}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={(e) => {
+          setRowsPerPage(parseInt(e.target.value, 10));
+          setPage(0);
+        }}
+        rowsPerPageOptions={[5, 10, 25]}
+        labelRowsPerPage="На странице"
+      />
     </Paper>
   );
 }

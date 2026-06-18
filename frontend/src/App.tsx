@@ -3,6 +3,10 @@ import { Container, Box, Button, TextField, Table, TableHead, TableRow, TableCel
 import { Edit, Delete, Save, Close } from "@mui/icons-material"
 
 import { Header } from './components/Header';
+import { RoomsCatalogPage } from './components/RoomsCatalog/RoomsCatalogPage';
+import { API_BASE } from './config';
+
+type NavId = "catalog" | "bookings" | "settings";
 
 
 type Device = { id: string; name: string; status: 'active' | 'maintenance' | 'broken'; type: string; }
@@ -10,7 +14,8 @@ type Auditory = { id: string; name: string; capacity?: number; status?: string }
 type Booking = { id: string; deviceId: string; auditoryId: string; device?: Device; auditory?: Auditory }
 
 export default function App() {
-  const [tab, setTab] = useState<0|1|2>(0)
+  const [activeNav, setActiveNav] = useState<NavId>("catalog")
+  const [settingsTab, setSettingsTab] = useState<0 | 1>(0)
 
   const [devices, setDevices] = useState<Device[]>([])
   const [auditories, setAuditories] = useState<Auditory[]>([])
@@ -36,10 +41,7 @@ export default function App() {
   const [editBookingAuditoryId, setEditBookingAuditoryId] = useState("")
 
 
-  let  API: string = "http://localhost:3000/api"
-    if ((import.meta as any).env?.PROD || (globalThis as any).process?.env?.NODE_ENV === "production") {
-      API = "https://rooms-9z2w.onrender.com/api"
-    }
+  const API = API_BASE
 
   useEffect(() => { loadAll() }, [])
 
@@ -171,23 +173,209 @@ const saveBooking = async (id: string) => {
   return (
     <Box sx={{ bgcolor: "#f8fafc", minHeight: "100vh" }}>
      <Header 
-        activeNavId={tab.toString()} 
-        onNavigate={(id) => setTab(Number(id) as any)} 
+        activeNavId={activeNav} 
+        onNavigate={(id) => setActiveNav(id as NavId)} 
       />
-    <Container maxWidth="md" sx={{ mt: 6, mb: 6, mx: "auto" }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider',justifyContent: 'center', mb: 4 }}></Box>
-      
-      <Tabs value={tab} onChange={(_,v)=>setTab(v)}>
-        <Tab label="Devices"/>
-        <Tab label="Auditories"/>
-        <Tab label="Bookings"/>
+
+    {activeNav === "catalog" && (
+      <Box sx={{ pt: 4, pb: 6 }}>
+        <RoomsCatalogPage />
+      </Box>
+    )}
+
+    {activeNav === "bookings" && (
+    <Container maxWidth="md" sx={{ mt: 4, mb: 6, mx: "auto" }}>
+      <Typography variant="h5" fontWeight={700} mb={3}>Управление бронированием</Typography>
+      <Box sx={{ mt: 1 }}>
+          <Box>
+            <Stack direction="row" spacing={3} mb={4}>
+              <Paper elevation={0} sx={{ p: 2, flex: 1, borderRadius: 3, border: "1px solid #e2e8f0", bgcolor: "white" }}>
+                <Typography variant="caption" color="text.secondary" fontWeight={600}>Всего бронирований</Typography>
+                <Typography variant="h6" fontWeight={800}>{bookings.length}</Typography>
+              </Paper>
+              <Paper elevation={0} sx={{ p: 2, flex: 1, borderRadius: 3, border: "1px solid #e2e8f0", bgcolor: "white", borderLeft: "4px solid #3b82f6" }}>
+                <Typography variant="caption" color="text.secondary" fontWeight={600}>Активные связи</Typography>
+                <Typography variant="h6" fontWeight={800} color="#3b82f6">
+                  {bookings.length > 0 ? "В работе" : "Нет данных"}
+                </Typography>
+              </Paper>
+            </Stack>
+
+            <Typography variant="h5" fontWeight={700} mb={3} textAlign="center">
+              Бронирование оборудования
+            </Typography>
+
+            <Paper elevation={0} sx={{ p: 2.5, mb: 4, borderRadius: 4, border: "1px solid #e2e8f0", bgcolor: "white", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.02)" }}>
+              <Stack direction="row" spacing={2} alignItems="center">
+                <TextField
+                  select
+                  label="Выберите устройство"
+                  fullWidth
+                  size="small"
+                  value={newBookingDevice}
+                  onChange={(e) => setNewBookingDevice(e.target.value)}
+                  SelectProps={{ native: true }}
+                  InputProps={{ sx: { borderRadius: 3 } }}
+                >
+                  <option value=""></option>
+                  {devices.map((d) => (
+                    <option key={d.id} value={d.id}>{d.name}</option>
+                  ))}
+                </TextField>
+
+                <Box sx={{ color: "text.secondary", fontWeight: 700 }}>→</Box>
+
+                <TextField
+                  select
+                  label="Выберите аудиторию"
+                  fullWidth
+                  size="small"
+                  value={newBookingAuditory}
+                  onChange={(e) => setNewBookingAuditory(e.target.value)}
+                  SelectProps={{ native: true }}
+                  InputProps={{ sx: { borderRadius: 3 } }}
+                >
+                  <option value=""></option>
+                  {auditories.map((a) => (
+                    <option key={a.id} value={a.id}>{a.name}</option>
+                  ))}
+                </TextField>
+
+                <Button 
+                  onClick={createBooking} 
+                  variant="contained" 
+                  disableElevation
+                  sx={{ px: 4, py: 1, borderRadius: 3, fontWeight: 700, whiteSpace: 'nowrap' }}
+                  disabled={!newBookingDevice || !newBookingAuditory}
+                >
+                  Закрепить
+                </Button>
+              </Stack>
+            </Paper>
+
+            <TableContainer component={Paper} elevation={0} sx={{ borderRadius: 4, border: "1px solid #e2e8f0" }}>
+              <Table>
+                <TableHead sx={{ bgcolor: "#f8fafc" }}>
+                  <TableRow>
+                    <TableCell sx={{ fontWeight: 700 }}>ID</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>Устройство</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }}>Помещение</TableCell>
+                    <TableCell sx={{ fontWeight: 700 }} align="right">Действие</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                   {bookings.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={4} align="center" sx={{ py: 4, color: 'text.secondary' }}>
+                        Нет активных бронирований
+                      </TableCell>
+                    </TableRow>
+                  ) : (
+                    bookings.map((b) => {
+                      const isEditing = editBookingId === b.id;
+                      const deviceName = devices.find(d => d.id === b.deviceId)?.name || "Неизвестно";
+                      const auditoryName = auditories.find(a => a.id === b.auditoryId)?.name || "Неизвестно";
+                      
+                      return (
+                        <TableRow key={b.id} hover>
+                          <TableCell sx={{ color: "text.secondary", fontSize: "0.75rem" }}>
+                            {b.id.slice(0, 8)}...
+                          </TableCell>
+                          <TableCell>
+                            {isEditing ? (
+                              <TextField
+                                select
+                                fullWidth
+                                size="small"
+                                SelectProps={{ native: true }}
+                                value={editBookingDeviceId}
+                                onChange={(e) => setEditBookingDeviceId(e.target.value)}
+                              >
+                                {devices.map((d) => (
+                                  <option key={d.id} value={d.id}>{d.name}</option>
+                                ))}
+                              </TextField>
+                            ) : (
+                              <Typography fontWeight={600} color="primary.main">{deviceName}</Typography>
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            {isEditing ? (
+                              <TextField
+                                select
+                                fullWidth
+                                size="small"
+                                SelectProps={{ native: true }}
+                                value={editBookingAuditoryId}
+                                onChange={(e) => setEditBookingAuditoryId(e.target.value)}
+                              >
+                                {auditories.map((a) => (
+                                  <option key={a.id} value={a.id}>{a.name}</option>
+                                ))}
+                              </TextField>
+                            ) : (
+                              <Typography fontWeight={500}>{auditoryName}</Typography>
+                            )}
+                          </TableCell>
+                          <TableCell align="right">
+                            <Stack direction="row" spacing={1} justifyContent="flex-end">
+                              {isEditing ? (
+                                <>
+                                  <IconButton color="success" onClick={() => saveBooking(b.id)}>
+                                    <Save fontSize="small" />
+                                  </IconButton>
+                                  <IconButton color="default" onClick={() => setEditBookingId(null)}>
+                                    <Close fontSize="small" />
+                                  </IconButton>
+                                </>
+                              ) : (
+                                <>
+                                  <IconButton 
+                                    color="primary" 
+                                    size="small"
+                                    onClick={() => {
+                                      setEditBookingId(b.id);
+                                      setEditBookingDeviceId(b.deviceId);
+                                      setEditBookingAuditoryId(b.auditoryId);
+                                    }}
+                                  >
+                                    <Edit fontSize="small" />
+                                  </IconButton>
+                                  <IconButton 
+                                    onClick={() => deleteBooking(b.id)} 
+                                    color="error" 
+                                    size="small"
+                                    sx={{ bgcolor: '#fef2f2', '&:hover': { bgcolor: '#fee2e2' } }}
+                                  >
+                                    <Delete fontSize="small" />
+                                  </IconButton>
+                                </>
+                              )}
+                            </Stack>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Box>
+      </Box>
+    </Container>
+    )}
+
+    {activeNav === "settings" && (
+    <Container maxWidth="md" sx={{ mt: 4, mb: 6, mx: "auto" }}>
+      <Typography variant="h5" fontWeight={700} mb={2}>Настройки</Typography>
+      <Tabs value={settingsTab} onChange={(_, v) => setSettingsTab(v)} sx={{ mb: 3 }}>
+        <Tab label="Устройства" />
+        <Tab label="Аудитории" />
       </Tabs>
 
-      <Box sx={{ mt:3 }}>
-        {/* Devices */}
-        {tab===0 && (
+      <Box sx={{ mt: 1 }}>
+        {settingsTab === 0 && (
           <Box>
-              {/* 1. СТАТИСТИКА УСТРОЙСТВ  */}
               <Stack direction="row" spacing={3} mb={4}>
                 <Paper sx={{ p: 2, flex: 1, borderRadius: 3, border: "1px solid #e2e8f0" }}>
                   <Typography variant="caption" color="text.secondary">Всего устройств</Typography>
@@ -243,13 +431,11 @@ const saveBooking = async (id: string) => {
                             </>
                           )}
                         </TableCell>
-                        
                         <TableCell>
                           <Box sx={{ display: 'inline-block', px: 1.5, py: 0.5, borderRadius: 5, fontSize: '0.75rem', fontWeight: 700, bgcolor: '#ecfdf5', color: '#10b981' }}>
                             В работе
                           </Box>
                         </TableCell>
-
                         <TableCell align="right">
                           <Stack direction="row" spacing={1} justifyContent="flex-end">
                             {editDeviceId === d.id ? (
@@ -277,8 +463,7 @@ const saveBooking = async (id: string) => {
           </Box>
         )}
 
-        {/* Auditories */}
-        {tab===1 && (
+        {settingsTab === 1 && (
           <Box>
              {/* 1. СТАТИСТИКА АУДИТОРИЙ  */}
               <Stack direction="row" spacing={3} mb={4}>
@@ -447,198 +632,10 @@ const saveBooking = async (id: string) => {
           </Box>
         )}
 
-        {/* Bookings */}
-        {tab===2 && (
-          <Box>
-            <Stack direction="row" spacing={3} mb={4}>
-              <Paper elevation={0} sx={{ p: 2, flex: 1, borderRadius: 3, border: "1px solid #e2e8f0", bgcolor: "white" }}>
-                <Typography variant="caption" color="text.secondary" fontWeight={600}>Всего бронирований</Typography>
-                <Typography variant="h6" fontWeight={800}>{bookings.length}</Typography>
-              </Paper>
-              <Paper elevation={0} sx={{ p: 2, flex: 1, borderRadius: 3, border: "1px solid #e2e8f0", bgcolor: "white", borderLeft: "4px solid #3b82f6" }}>
-                <Typography variant="caption" color="text.secondary" fontWeight={600}>Активные связи</Typography>
-                <Typography variant="h6" fontWeight={800} color="#3b82f6">
-                  {bookings.length > 0 ? "В работе" : "Нет данных"}
-                </Typography>
-              </Paper>
-            </Stack>
-
-            <Typography variant="h5" fontWeight={700} mb={3} textAlign="center">
-              Бронирование оборудования
-            </Typography>
-
-            {/* 2. ФОРМА СОЗДАНИЯ БРОНИРОВАНИЯ */}
-            <Paper elevation={0} sx={{ p: 2.5, mb: 4, borderRadius: 4, border: "1px solid #e2e8f0", bgcolor: "white", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.02)" }}>
-              <Stack direction="row" spacing={2} alignItems="center">
-                <TextField
-                  select
-                  label="Выберите устройство"
-                  fullWidth
-                  size="small"
-                  value={newBookingDevice}
-                  onChange={(e) => setNewBookingDevice(e.target.value)}
-                  SelectProps={{ native: true }}
-                  InputProps={{ sx: { borderRadius: 3 } }}
-                >
-                  <option value=""></option>
-                  {devices.map((d) => (
-                    <option key={d.id} value={d.id}>{d.name}</option>
-                  ))}
-                </TextField>
-
-                <Box sx={{ color: "text.secondary", fontWeight: 700 }}>→</Box>
-
-                <TextField
-                  select
-                  label="Выберите аудиторию"
-                  fullWidth
-                  size="small"
-                  value={newBookingAuditory}
-                  onChange={(e) => setNewBookingAuditory(e.target.value)}
-                  SelectProps={{ native: true }}
-                  InputProps={{ sx: { borderRadius: 3 } }}
-                >
-                  <option value=""></option>
-                  {auditories.map((a) => (
-                    <option key={a.id} value={a.id}>{a.name}</option>
-                  ))}
-                </TextField>
-
-                <Button 
-                  onClick={createBooking} 
-                  variant="contained" 
-                  disableElevation
-                  sx={{ px: 4, py: 1, borderRadius: 3, fontWeight: 700, whiteSpace: 'nowrap' }}
-                  disabled={!newBookingDevice || !newBookingAuditory}
-                >
-                  Закрепить
-                </Button>
-              </Stack>
-            </Paper>
-
-            {/* 3. ТАБЛИЦА БРОНИРОВАНИЙ */}
-            <TableContainer component={Paper} elevation={0} sx={{ borderRadius: 4, border: "1px solid #e2e8f0" }}>
-              <Table>
-                <TableHead sx={{ bgcolor: "#f8fafc" }}>
-                  <TableRow>
-                    <TableCell sx={{ fontWeight: 700 }}>ID</TableCell>
-                    <TableCell sx={{ fontWeight: 700 }}>Устройство</TableCell>
-                    <TableCell sx={{ fontWeight: 700 }}>Помещение</TableCell>
-                    <TableCell sx={{ fontWeight: 700 }} align="right">Действие</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                   {bookings.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={4} align="center" sx={{ py: 4, color: 'text.secondary' }}>
-                        Нет активных бронирований
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    bookings.map((b) => {
-                      // Проверяем, редактируется ли сейчас эта строка
-                      const isEditing = editBookingId === b.id;
-                      const deviceName = devices.find(d => d.id === b.deviceId)?.name || "Неизвестно";
-                      const auditoryName = auditories.find(a => a.id === b.auditoryId)?.name || "Неизвестно";
-                      
-                      return (
-                        <TableRow key={b.id} hover>
-                          {/* 1. ID */}
-                          <TableCell sx={{ color: "text.secondary", fontSize: "0.75rem" }}>
-                            {b.id.slice(0, 8)}...
-                          </TableCell>
-
-                          {/* 2. УСТРОЙСТВО */}
-                          <TableCell>
-                            {isEditing ? (
-                              <TextField
-                                select
-                                fullWidth
-                                size="small"
-                                SelectProps={{ native: true }}
-                                value={editBookingDeviceId}
-                                onChange={(e) => setEditBookingDeviceId(e.target.value)}
-                              >
-                                {devices.map((d) => (
-                                  <option key={d.id} value={d.id}>{d.name}</option>
-                                ))}
-                              </TextField>
-                            ) : (
-                              <Typography fontWeight={600} color="primary.main">{deviceName}</Typography>
-                            )}
-                          </TableCell>
-
-                          {/* 3. ПОМЕЩЕНИЕ */}
-                          <TableCell>
-                            {isEditing ? (
-                              <TextField
-                                select
-                                fullWidth
-                                size="small"
-                                SelectProps={{ native: true }}
-                                value={editBookingAuditoryId}
-                                onChange={(e) => setEditBookingAuditoryId(e.target.value)}
-                              >
-                                {auditories.map((a) => (
-                                  <option key={a.id} value={a.id}>{a.name}</option>
-                                ))}
-                              </TextField>
-                            ) : (
-                              <Typography fontWeight={500}>{auditoryName}</Typography>
-                            )}
-                          </TableCell>
-
-                          {/* 4. ДЕЙСТВИЯ */}
-                          <TableCell align="right">
-                            <Stack direction="row" spacing={1} justifyContent="flex-end">
-                              {isEditing ? (
-                                <>
-                                  {/* Кнопки СОХРАНИТЬ и ОТМЕНА */}
-                                  <IconButton color="success" onClick={() => saveBooking(b.id)}>
-                                    <Save fontSize="small" />
-                                  </IconButton>
-                                  <IconButton color="default" onClick={() => setEditBookingId(null)}>
-                                    <Close fontSize="small" />
-                                  </IconButton>
-                                </>
-                              ) : (
-                                <>
-                                  {/* Кнопки ИЗМЕНИТЬ и УДАЛИТЬ */}
-                                  <IconButton 
-                                    color="primary" 
-                                    size="small"
-                                    onClick={() => {
-                                      setEditBookingId(b.id);
-                                      setEditBookingDeviceId(b.deviceId);
-                                      setEditBookingAuditoryId(b.auditoryId);
-                                    }}
-                                  >
-                                    <Edit fontSize="small" />
-                                  </IconButton>
-                                  <IconButton 
-                                    onClick={() => deleteBooking(b.id)} 
-                                    color="error" 
-                                    size="small"
-                                    sx={{ bgcolor: '#fef2f2', '&:hover': { bgcolor: '#fee2e2' } }}
-                                  >
-                                    <Delete fontSize="small" />
-                                  </IconButton>
-                                </>
-                              )}
-                            </Stack>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Box>
-        )}
-
       </Box>
     </Container>
+    )}
+
     </Box>
   )
 }

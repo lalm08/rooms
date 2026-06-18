@@ -135,15 +135,23 @@ exports.Prisma.DeviceScalarFieldEnum = {
 
 exports.Prisma.AuditoryScalarFieldEnum = {
   id: 'id',
+  code: 'code',
   name: 'name',
+  description: 'description',
   capacity: 'capacity',
-  status: 'status'
+  status: 'status',
+  building: 'building',
+  floor: 'floor',
+  equipment: 'equipment',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.BookingScalarFieldEnum = {
   id: 'id',
   deviceId: 'deviceId',
-  auditoryId: 'auditoryId'
+  auditoryId: 'auditoryId',
+  createdAt: 'createdAt'
 };
 
 exports.Prisma.SortOrder = {

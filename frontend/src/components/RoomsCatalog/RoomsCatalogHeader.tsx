@@ -1,14 +1,9 @@
 // src/components/RoomsCatalog/RoomsCatalogHeader.tsx
-import { Stack, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 
 function RoomsCatalogHeader() {
   return (
-    <Stack
-      direction="row"
-      justifyContent="space-between"
-      alignItems="center"   // ← было flex-end → теперь center
-      mb={4}
-    >
+    <header className="catalog-page-header">
       <div>
         <Typography variant="h5" fontWeight={700} color="#11181c">
           Каталог аудиторий
@@ -18,12 +13,12 @@ function RoomsCatalogHeader() {
         </Typography>
       </div>
 
-      <Stack direction="row" spacing={1.5}>
-        <button className="header-btn outline">Экспорт JSON</button>
-        <button className="header-btn outline">Импорт JSON</button>
-        <button className="header-btn primary">+ Добавить аудиторию</button>
-      </Stack>
-    </Stack>
+      <div className="catalog-page-header-actions">
+        <button type="button" className="header-btn outline">Экспорт JSON</button>
+        <button type="button" className="header-btn outline">Импорт JSON</button>
+        <button type="button" className="header-btn primary">+ Добавить аудиторию</button>
+      </div>
+    </header>
   );
 }
 export default RoomsCatalogHeader;

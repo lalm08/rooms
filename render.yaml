@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: rooms-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    branch: master
+    healthCheckPath: /api/rooms/stats
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: rooms-db
+          property: connectionString
+      - key: NODE_ENV
+        value: production
+
+databases:
+  - name: rooms-db
+    plan: free

@@ -5,10 +5,9 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
-// Пользователь
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
@@ -16,27 +15,32 @@ model User {
   createdAt DateTime @default(now())
 }
 
-// Устройства
 model Device {
-  id       String   @id @default(cuid())
+  id       String    @id @default(cuid())
   name     String
   bookings Booking[]
 }
 
-// Аудитории
 model Auditory {
-  id       String   @id @default(cuid())
-  name     String
-  capacity Int?      
-  status   String? 
-  bookings Booking[]
+  id          String    @id @default(cuid())
+  code        String    @unique
+  name        String
+  description String?
+  capacity    Int       @default(0)
+  status      String    @default("available")
+  building    String    @default("Главный корпус")
+  floor       Int       @default(1)
+  equipment   String[]  @default([])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  bookings    Booking[]
 }
 
-// Бронирования
 model Booking {
-  id          String   @id @default(cuid())
-  deviceId    String
-  auditoryId  String
+  id         String   @id @default(cuid())
+  deviceId   String
+  auditoryId String
+  createdAt  DateTime @default(now())
 
   device   Device   @relation(fields: [deviceId], references: [id])
   auditory Auditory @relation(fields: [auditoryId], references: [id])

@@ -1,2 +1,7 @@
- export const APP_TITLE = (import.meta as any).env.VITE_APP_TITLE;
-export const API_URL = (import.meta as any).env.VITE_API_URL;
+export const API_BASE =
+  (import.meta as { env?: { PROD?: boolean; VITE_API_URL?: string } }).env?.VITE_API_URL
+  ?? (
+    (import.meta as { env?: { PROD?: boolean } }).env?.PROD
+      ? 'https://rooms-9z2w.onrender.com/api'
+      : '/api'
+  )
