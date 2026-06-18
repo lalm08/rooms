@@ -16,6 +16,8 @@ services:
         value: production
       - key: HOST
         value: 0.0.0.0
+      - key: CI
+        value: "true"
 
 databases:
   - name: rooms-db

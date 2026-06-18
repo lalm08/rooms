@@ -32,7 +32,8 @@ COPY --from=build /app/dist         ./dist
 COPY --from=build /app/prisma ./prisma
 COPY --from=build /app/src/generated/prisma ./dist/src/generated/prisma
 COPY scripts/start-prod.sh ./scripts/start-prod.sh
-RUN chmod +x ./scripts/start-prod.sh
+RUN sed -i 's/\r$//' ./scripts/start-prod.sh && chmod +x ./scripts/start-prod.sh
 
 EXPOSE 3000
-CMD ["./scripts/start-prod.sh"]
+ENV CI=true
+CMD ["sh", "./scripts/start-prod.sh"]
