@@ -311,6 +311,7 @@
 .equip-pill.board { background: #fce7f3; color: #db2777; }
 .equip-pill.ac { background: #e0f2fe; color: #0284c7; }
 .equip-pill.video { background: #fef2f2; color: #dc2626; }
+.equip-pill.generic { background: #f1f5f9; color: #475569; }
 
 /* --- Статус-бейджи --- */
 .status-badge {

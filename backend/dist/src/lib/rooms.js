@@ -1,4 +1,23 @@
 const VALID_STATUS = new Set(['available', 'booked', 'maintenance']);
+/** Синонимы: ключ фильтра / имя из справочника устройств → значения в auditory.equipment[] */
+const EQUIPMENT_ALIASES = {
+    projector: ['projector', 'проектор', 'Проектор'],
+    computers: ['computers', 'компьютер', 'компьютеры', 'Компьютеры'],
+    board: ['board', 'доска', 'Доска', 'интерактивная доска', 'Интерактивная доска'],
+    microphone: ['microphone', 'микрофон', 'Микрофон'],
+    wifi: ['wifi', 'Wi-Fi', 'wi-fi', 'Wi Fi'],
+};
+function expandEquipmentValues(tag) {
+    const direct = EQUIPMENT_ALIASES[tag.toLowerCase()];
+    if (direct)
+        return direct;
+    for (const values of Object.values(EQUIPMENT_ALIASES)) {
+        if (values.some((v) => v.toLowerCase() === tag.toLowerCase())) {
+            return values;
+        }
+    }
+    return [tag];
+}
 export function toRoomDto(a) {
     const status = VALID_STATUS.has(a.status)
         ? a.status
@@ -35,11 +54,17 @@ export function buildRoomsWhere(query) {
     }
     if (query.equipment) {
         const tags = query.equipment.split(',').map((t) => t.trim()).filter(Boolean);
-        if (tags.length === 1) {
-            where.equipment = { has: tags[0] };
+        const equipConditions = tags.map((tag) => ({
+            equipment: { hasSome: expandEquipmentValues(tag) },
+        }));
+        if (equipConditions.length === 1) {
+            Object.assign(where, equipConditions[0]);
         }
-        else if (tags.length > 1) {
-            where.AND = tags.map((tag) => ({ equipment: { has: tag } }));
+        else if (equipConditions.length > 1) {
+            const prevAnd = where.AND
+                ? Array.isArray(where.AND) ? where.AND : [where.AND]
+                : [];
+            where.AND = [...prevAnd, ...equipConditions];
         }
     }
     return where;

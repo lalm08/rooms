@@ -26,6 +26,28 @@ export interface RoomsQuery {
 
 const VALID_STATUS = new Set<RoomStatus>(['available', 'booked', 'maintenance'])
 
+/** Синонимы: ключ фильтра / имя из справочника устройств → значения в auditory.equipment[] */
+const EQUIPMENT_ALIASES: Record<string, string[]> = {
+  projector: ['projector', 'проектор', 'Проектор'],
+  computers: ['computers', 'компьютер', 'компьютеры', 'Компьютеры'],
+  board: ['board', 'доска', 'Доска', 'интерактивная доска', 'Интерактивная доска'],
+  microphone: ['microphone', 'микрофон', 'Микрофон'],
+  wifi: ['wifi', 'Wi-Fi', 'wi-fi', 'Wi Fi'],
+}
+
+function expandEquipmentValues(tag: string): string[] {
+  const direct = EQUIPMENT_ALIASES[tag.toLowerCase()]
+  if (direct) return direct
+
+  for (const values of Object.values(EQUIPMENT_ALIASES)) {
+    if (values.some((v) => v.toLowerCase() === tag.toLowerCase())) {
+      return values
+    }
+  }
+
+  return [tag]
+}
+
 export function toRoomDto(a: {
   id: string
   code: string
@@ -79,10 +101,17 @@ export function buildRoomsWhere(query: RoomsQuery): Prisma.AuditoryWhereInput {
 
   if (query.equipment) {
     const tags = query.equipment.split(',').map((t) => t.trim()).filter(Boolean)
-    if (tags.length === 1) {
-      where.equipment = { has: tags[0] }
-    } else if (tags.length > 1) {
-      where.AND = tags.map((tag) => ({ equipment: { has: tag } }))
+    const equipConditions = tags.map((tag) => ({
+      equipment: { hasSome: expandEquipmentValues(tag) },
+    }))
+
+    if (equipConditions.length === 1) {
+      Object.assign(where, equipConditions[0])
+    } else if (equipConditions.length > 1) {
+      const prevAnd = where.AND
+        ? Array.isArray(where.AND) ? where.AND : [where.AND]
+        : []
+      where.AND = [...prevAnd, ...equipConditions]
     }
   }
 

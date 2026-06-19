@@ -10,6 +10,12 @@ type NavId = "catalog" | "bookings" | "settings";
 
 export default function App() {
   const [activeNav, setActiveNav] = useState<NavId>("catalog");
+  const [settingsTab, setSettingsTab] = useState(1);
+
+  const openSettingsAuditories = () => {
+    setSettingsTab(1);
+    setActiveNav("settings");
+  };
 
   return (
     <Box sx={{ bgcolor: "#f8fafc", minHeight: "100vh" }}>
@@ -20,13 +26,15 @@ export default function App() {
 
       {activeNav === "catalog" && (
         <Box sx={{ pt: 3, pb: 6 }}>
-          <RoomsCatalogPage />
+          <RoomsCatalogPage onOpenSettings={openSettingsAuditories} />
         </Box>
       )}
 
       {activeNav === "bookings" && <BookingsPlaceholder />}
 
-      {activeNav === "settings" && <SettingsPage />}
+      {activeNav === "settings" && (
+        <SettingsPage initialTab={settingsTab} onTabChange={setSettingsTab} />
+      )}
     </Box>
   );
 }

@@ -66,6 +66,11 @@ export const EQUIPMENT_TAG_MAP: Record<string, string> = {
   "Wi-Fi": "wifi",
 };
 
+export async function fetchDevices(): Promise<Array<{ id: string; name: string }>> {
+  const { data } = await http.get<Array<{ id: string; name: string }>>("/devices");
+  return data;
+}
+
 export async function fetchRooms(
   page = 1,
   filters: Partial<RoomsFilters> = {},

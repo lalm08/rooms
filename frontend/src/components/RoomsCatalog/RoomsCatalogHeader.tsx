@@ -1,9 +1,13 @@
 import { Typography } from "@mui/material";
 import FileUploadOutlined from "@mui/icons-material/FileUploadOutlined";
 import FileDownloadOutlined from "@mui/icons-material/FileDownloadOutlined";
-import AddOutlined from "@mui/icons-material/AddOutlined";
+import SettingsOutlined from "@mui/icons-material/SettingsOutlined";
 
-function RoomsCatalogHeader() {
+type Props = {
+  onOpenSettings?: () => void;
+};
+
+function RoomsCatalogHeader({ onOpenSettings }: Props) {
   return (
     <header className="catalog-page-header">
       <div>
@@ -24,8 +28,8 @@ function RoomsCatalogHeader() {
           <FileUploadOutlined fontSize="small" />
           Импорт JSON
         </button>
-        <button type="button" className="header-btn primary">
-          <AddOutlined fontSize="small" />
+        <button type="button" className="header-btn primary" onClick={onOpenSettings}>
+          <SettingsOutlined fontSize="small" />
           Добавить аудиторию
         </button>
       </div>

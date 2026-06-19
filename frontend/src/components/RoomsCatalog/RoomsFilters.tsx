@@ -1,13 +1,9 @@
 import { useEffect, useState } from "react";
 import { Paper, TextField, Typography, CircularProgress, Box, Stack } from "@mui/material";
 import SearchOutlined from "@mui/icons-material/SearchOutlined";
-import {
-  EQUIPMENT_TAG_MAP,
-  fetchBuildings,
-  type RoomsFilters as RoomsFiltersType,
-} from "@/api/roomsApi";
+import { fetchBuildings, fetchDevices, type RoomsFilters as RoomsFiltersType } from "@/api/roomsApi";
 
-const EQUIPMENT_TAGS = Object.keys(EQUIPMENT_TAG_MAP);
+const FLOORS = [1, 2, 3, 4, 5];
 
 const EMPTY_FILTERS: RoomsFiltersType = {
   search: "",
@@ -24,26 +20,29 @@ type Props = {
 
 function RoomsFilters({ filters, onChange }: Props) {
   const [buildings, setBuildings] = useState<string[]>([]);
-  const [loadingBuildings, setLoadingBuildings] = useState(true);
+  const [devices, setDevices] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
     (async () => {
       try {
-        const data = await fetchBuildings();
-        if (mounted) setBuildings(data);
+        const [b, d] = await Promise.all([fetchBuildings(), fetchDevices()]);
+        if (mounted) {
+          setBuildings(b);
+          setDevices(d.map((x) => x.name));
+        }
       } finally {
-        if (mounted) setLoadingBuildings(false);
+        if (mounted) setLoading(false);
       }
     })();
     return () => { mounted = false; };
   }, []);
 
-  const toggleTag = (tag: string) => {
-    const key = EQUIPMENT_TAG_MAP[tag];
+  const toggleDevice = (name: string) => {
     const next = new Set(filters.equipment);
-    if (next.has(key)) next.delete(key);
-    else next.add(key);
+    if (next.has(name)) next.delete(name);
+    else next.add(name);
     onChange({ ...filters, equipment: [...next] });
   };
 
@@ -73,7 +72,7 @@ function RoomsFilters({ filters, onChange }: Props) {
           className="filter-select"
           value={filters.building}
           onChange={(e) => onChange({ ...filters, building: e.target.value })}
-          disabled={loadingBuildings}
+          disabled={loading}
         >
           <option value="">Все корпуса</option>
           {buildings.map((b) => (
@@ -86,7 +85,7 @@ function RoomsFilters({ filters, onChange }: Props) {
           onChange={(e) => onChange({ ...filters, floor: e.target.value })}
         >
           <option value="">Все этажи</option>
-          {[1, 2, 3, 4].map((f) => (
+          {FLOORS.map((f) => (
             <option key={f} value={String(f)}>{f} этаж</option>
           ))}
         </select>
@@ -102,25 +101,25 @@ function RoomsFilters({ filters, onChange }: Props) {
         </select>
       </div>
 
-      {loadingBuildings ? (
+      {loading ? (
         <Box sx={{ py: 1 }}><CircularProgress size={20} /></Box>
-      ) : (
+      ) : devices.length > 0 ? (
         <div className="equipment-tags">
-          {EQUIPMENT_TAGS.map((tag) => {
-            const key = EQUIPMENT_TAG_MAP[tag];
-            const active = filters.equipment.includes(key);
-            return (
-              <button
-                key={tag}
-                type="button"
-                className={`equip-tag${active ? " active" : ""}`}
-                onClick={() => toggleTag(tag)}
-              >
-                {tag}
-              </button>
-            );
-          })}
+          {devices.map((name) => (
+            <button
+              key={name}
+              type="button"
+              className={`equip-tag${filters.equipment.includes(name) ? " active" : ""}`}
+              onClick={() => toggleDevice(name)}
+            >
+              {name}
+            </button>
+          ))}
         </div>
+      ) : (
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          Добавьте устройства в настройках, чтобы фильтровать по оборудованию
+        </Typography>
       )}
     </Paper>
   );
