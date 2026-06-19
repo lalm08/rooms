@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { Paper, Stack, Typography, CircularProgress, Box } from "@mui/material";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import MeetingRoomOutlined from "@mui/icons-material/MeetingRoomOutlined";
+import CheckCircleOutline from "@mui/icons-material/CheckCircleOutline";
+import EventBusyOutlined from "@mui/icons-material/EventBusyOutlined";
+import BuildOutlined from "@mui/icons-material/BuildOutlined";
 import { fetchRoomsStats } from "@/api/roomsApi";
 
 const RoomsStatsCards = () => {
@@ -29,37 +32,29 @@ const RoomsStatsCards = () => {
   }
 
   const cards = [
-    { value: stats.total, label: "Всего аудиторий", growth: stats.total > 0 },
-    { value: stats.available, label: "Доступные сейчас", variant: "success" as const, badge: "Активно", badgeClass: "green" },
-    { value: stats.booked, label: "Забронированы", variant: "warning" as const, badge: "Занято", badgeClass: "orange" },
-    { value: stats.equipmentUnits, label: "Единиц оборудования", variant: "info" as const, badge: "Обновлено", badgeClass: "blue" },
+    { value: stats.total, label: "Всего аудиторий", icon: MeetingRoomOutlined, iconClass: "blue" },
+    { value: stats.available, label: "Доступные сейчас", icon: CheckCircleOutline, iconClass: "green" },
+    { value: stats.booked, label: "Забронированы", icon: EventBusyOutlined, iconClass: "orange" },
+    { value: stats.equipmentUnits, label: "Единиц оборудования", icon: BuildOutlined, iconClass: "purple" },
   ];
 
   return (
     <div className="stats-grid">
       {cards.map((card) => (
-        <Paper
-          key={card.label}
-          elevation={0}
-          className={card.variant ? `stats-card ${card.variant}` : "stats-card"}
-        >
-          <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
-            <Typography variant="h4" fontWeight={700}>
-              {card.value}
-            </Typography>
-            {card.growth && card.label === "Всего аудиторий" && (
-              <span className="stats-growth">
-                <ArrowUpwardIcon fontSize="small" />
-                +12%
-              </span>
-            )}
-            {card.badge && (
-              <span className={`stats-badge ${card.badgeClass}`}>{card.badge}</span>
-            )}
+        <Paper key={card.label} elevation={0} className="stats-card-v2">
+          <Stack direction="row" spacing={2} alignItems="center">
+            <div className={`stats-icon-box ${card.iconClass}`}>
+              <card.icon fontSize="small" />
+            </div>
+            <Box>
+              <Typography variant="h5" fontWeight={700} lineHeight={1.2}>
+                {card.value}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                {card.label}
+              </Typography>
+            </Box>
           </Stack>
-          <Typography variant="body2" color="text.secondary" mt={0.5}>
-            {card.label}
-          </Typography>
         </Paper>
       ))}
     </div>

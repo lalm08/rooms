@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Paper, TextField, Typography, CircularProgress, Box } from "@mui/material";
+import { Paper, TextField, Typography, CircularProgress, Box, Stack } from "@mui/material";
+import SearchOutlined from "@mui/icons-material/SearchOutlined";
 import {
   EQUIPMENT_TAG_MAP,
   fetchBuildings,
@@ -46,20 +47,28 @@ function RoomsFilters({ filters, onChange }: Props) {
     onChange({ ...filters, equipment: [...next] });
   };
 
-  const resetAll = () => onChange({ ...EMPTY_FILTERS });
-
   return (
-    <Paper elevation={0} sx={{ p: 3, borderRadius: 2, border: "1px solid #e2e8f0" }}>
-      <Typography fontWeight={600} mb={2}>Фильтры и поиск</Typography>
+    <Paper elevation={0} className="filters-panel">
+      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography fontWeight={600}>Фильтры и поиск</Typography>
+        <button type="button" className="btn-text" onClick={() => onChange({ ...EMPTY_FILTERS })}>
+          Сбросить все
+        </button>
+      </Stack>
 
       <div className="filters-row">
-        <TextField
-          placeholder="Поиск по номеру или названию..."
-          size="small"
-          value={filters.search}
-          onChange={(e) => onChange({ ...filters, search: e.target.value })}
-          sx={{ minWidth: 280, flex: "1 1 280px" }}
-        />
+        <div className="search-field">
+          <SearchOutlined className="search-icon" fontSize="small" />
+          <TextField
+            placeholder="Поиск по номеру или названию..."
+            size="small"
+            fullWidth
+            value={filters.search}
+            onChange={(e) => onChange({ ...filters, search: e.target.value })}
+            variant="outlined"
+            InputProps={{ sx: { pl: 0.5 } }}
+          />
+        </div>
         <select
           className="filter-select"
           value={filters.building}
@@ -91,7 +100,6 @@ function RoomsFilters({ filters, onChange }: Props) {
           <option value="booked">Забронирована</option>
           <option value="maintenance">На обслуживании</option>
         </select>
-        <button type="button" className="btn-text" onClick={resetAll}>Сбросить все</button>
       </div>
 
       {loadingBuildings ? (

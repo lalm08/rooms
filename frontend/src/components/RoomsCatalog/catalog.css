@@ -14,7 +14,30 @@
   gap: 12px;
 }
 
-/* --- KPI-карточки --- */
+/* --- KPI-карточки v2 (с иконками) --- */
+.stats-card-v2 {
+  padding: 20px 24px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.stats-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.stats-icon-box.blue { background: #eff6ff; color: #2563eb; }
+.stats-icon-box.green { background: #ecfdf5; color: #10b981; }
+.stats-icon-box.orange { background: #fff7ed; color: #f97316; }
+.stats-icon-box.purple { background: #f3e8ff; color: #9333ea; }
+
+/* --- KPI-карточки (legacy) --- */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -93,6 +116,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   padding: 8px 16px;
   border-radius: 10px;
   font-size: 0.875rem;
@@ -126,6 +150,35 @@
 }
 
 /* --- Фильтры --- */
+.filters-panel {
+  padding: 20px 24px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+}
+
+.search-field {
+  position: relative;
+  flex: 1 1 280px;
+  min-width: 240px;
+}
+
+.search-field .search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.search-field .MuiTextField-root .MuiOutlinedInput-root {
+  padding-left: 32px;
+  border-radius: 8px;
+  background: #fff;
+}
+
 .filters-row {
   display: flex;
   flex-wrap: wrap;
@@ -158,8 +211,7 @@
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  padding: 8px 4px;
-  margin-left: auto;
+  padding: 4px 8px;
 }
 
 .btn-text:hover {
@@ -195,6 +247,97 @@
   background: #2563eb;
   border-color: #2563eb;
   color: #fff;
+}
+
+/* --- Таблица аудиторий --- */
+.rooms-table-panel {
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  background: #fff;
+}
+
+.rooms-table-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.rooms-table .MuiTableHead-root .MuiTableCell-root {
+  background: #f8fafc;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  color: #64748b;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.rooms-table .MuiTableBody-root .MuiTableCell-root {
+  font-size: 0.875rem;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle;
+}
+
+.room-code {
+  color: #64748b !important;
+  font-weight: 500;
+}
+
+.th-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  color: #64748b;
+}
+
+/* --- Теги оборудования в таблице --- */
+.equip-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.equip-pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.equip-pill.projector { background: #eff6ff; color: #2563eb; }
+.equip-pill.microphone { background: #fef3c7; color: #d97706; }
+.equip-pill.wifi { background: #ecfdf5; color: #059669; }
+.equip-pill.computers { background: #f3e8ff; color: #7c3aed; }
+.equip-pill.board { background: #fce7f3; color: #db2777; }
+.equip-pill.ac { background: #e0f2fe; color: #0284c7; }
+.equip-pill.video { background: #fef2f2; color: #dc2626; }
+
+/* --- Статус-бейджи --- */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge.available { background: #ecfdf5; color: #10b981; }
+.status-badge.booked { background: #fff7ed; color: #f97316; }
+.status-badge.maintenance { background: #f1f5f9; color: #64748b; }
+
+/* --- Нижняя сетка --- */
+.catalog-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1000px) {
+  .catalog-bottom-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* --- Быстрые действия --- */

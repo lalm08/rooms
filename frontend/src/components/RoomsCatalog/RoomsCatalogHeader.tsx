@@ -1,5 +1,7 @@
-// src/components/RoomsCatalog/RoomsCatalogHeader.tsx
 import { Typography } from "@mui/material";
+import FileUploadOutlined from "@mui/icons-material/FileUploadOutlined";
+import FileDownloadOutlined from "@mui/icons-material/FileDownloadOutlined";
+import AddOutlined from "@mui/icons-material/AddOutlined";
 
 function RoomsCatalogHeader() {
   return (
@@ -14,11 +16,21 @@ function RoomsCatalogHeader() {
       </div>
 
       <div className="catalog-page-header-actions">
-        <button type="button" className="header-btn outline">Экспорт JSON</button>
-        <button type="button" className="header-btn outline">Импорт JSON</button>
-        <button type="button" className="header-btn primary">+ Добавить аудиторию</button>
+        <button type="button" className="header-btn outline">
+          <FileDownloadOutlined fontSize="small" />
+          Экспорт JSON
+        </button>
+        <button type="button" className="header-btn outline">
+          <FileUploadOutlined fontSize="small" />
+          Импорт JSON
+        </button>
+        <button type="button" className="header-btn primary">
+          <AddOutlined fontSize="small" />
+          Добавить аудиторию
+        </button>
       </div>
     </header>
   );
 }
+
 export default RoomsCatalogHeader;

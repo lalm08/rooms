@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import {
   Paper, Table, TableHead, TableRow, TableCell, TableBody,
-  Chip, CircularProgress, Box, IconButton, Stack, Typography,
-  TablePagination,
+  CircularProgress, Box, IconButton, Stack, Typography,
+  Checkbox, TablePagination,
 } from "@mui/material";
-import { VisibilityOutlined, EditOutlined, DeleteOutline, Groups2Outlined } from "@mui/icons-material";
+import {
+  VisibilityOutlined, EditOutlined, DeleteOutline, Groups2Outlined,
+  ArrowUpward, ArrowDownward,
+} from "@mui/icons-material";
 import { fetchRooms, type RoomDto, type RoomsFilters } from "@/api/roomsApi";
 import { roomsPayload } from "@/mocks/data";
 
@@ -13,14 +16,15 @@ const STATUS_LABEL: Record<RoomDto["status"], string> = {
   booked: "Забронирована",
   maintenance: "На обслуживании",
 };
-const STATUS_COLOR: Record<RoomDto["status"], "success" | "warning" | "default"> = {
-  available: "success",
-  booked: "warning",
-  maintenance: "default",
-};
+
 const EQUIP_LABEL: Record<string, string> = {
-  projector: "Проектор", microphone: "Микрофон", wifi: "Wi-Fi",
-  computers: "Компьютеры", board: "Доска",
+  projector: "Проектор",
+  microphone: "Микрофон",
+  wifi: "Wi-Fi",
+  computers: "Компьютеры",
+  board: "Доска",
+  ac: "Кондиционер",
+  video: "Видеосвязь",
 };
 
 type Props = {
@@ -33,9 +37,11 @@ export function RoomsTable({ filters }: Props) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [total, setTotal] = useState(0);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     setPage(0);
+    setSelected(new Set());
   }, [filters]);
 
   useEffect(() => {
@@ -48,9 +54,8 @@ export function RoomsTable({ filters }: Props) {
           setItems(data.items);
           setTotal(data.total);
         }
-      } catch (e) {
+      } catch {
         if (mounted) {
-          console.warn("API /rooms недоступен, используем демо-данные:", e);
           setItems(roomsPayload.items);
           setTotal(roomsPayload.total);
         }
@@ -61,87 +66,129 @@ export function RoomsTable({ filters }: Props) {
     return () => { mounted = false; };
   }, [filters, page, rowsPerPage]);
 
-  if (loading && items.length === 0) {
-    return <Box sx={{ p: 3, display: "grid", placeItems: "center" }}><CircularProgress /></Box>;
-  }
+  const allSelected = items.length > 0 && items.every((r) => selected.has(r.id));
+  const someSelected = items.some((r) => selected.has(r.id)) && !allSelected;
+
+  const toggleAll = () => {
+    if (allSelected) setSelected(new Set());
+    else setSelected(new Set(items.map((r) => r.id)));
+  };
+
+  const toggleOne = (id: string) => {
+    const next = new Set(selected);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setSelected(next);
+  };
 
   return (
-    <Paper elevation={0} sx={{ borderRadius: 2, overflow: "hidden", border: "1px solid #eef0f3" }}>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell width={100}>Номер</TableCell>
-            <TableCell>Название</TableCell>
-            <TableCell width={160}>Расположение</TableCell>
-            <TableCell width={120} align="right">Вместимость</TableCell>
-            <TableCell>Оборудование</TableCell>
-            <TableCell width={170}>Статус</TableCell>
-            <TableCell width={120} align="center">Действия</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {items.length === 0 ? (
-            <TableRow>
-              <TableCell colSpan={7} align="center" sx={{ py: 4, color: "text.secondary" }}>
-                Аудитории не найдены
-              </TableCell>
-            </TableRow>
-          ) : items.map((r) => (
-            <TableRow key={r.id} hover>
-              <TableCell sx={{ color: "text.secondary" }}>{r.code}</TableCell>
-              <TableCell>
-                <Stack spacing={0.5}>
-                  <Typography fontWeight={600}>{r.name}</Typography>
-                  {r.description && (
-                    <Typography variant="caption" color="text.secondary">{r.description}</Typography>
-                  )}
-                </Stack>
-              </TableCell>
-              <TableCell>
-                <Typography variant="body2">{r.building}</Typography>
-                <Typography variant="caption" color="text.secondary">{r.floor} этаж</Typography>
-              </TableCell>
-              <TableCell align="right">
-                <Stack direction="row" spacing={1} justifyContent="flex-end" alignItems="center">
-                  <Groups2Outlined fontSize="small" />
-                  <span>{r.capacity}</span>
-                </Stack>
-              </TableCell>
-              <TableCell>
-                <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                  {r.equipment.map((k) => <Chip key={k} label={EQUIP_LABEL[k] ?? k} size="small" variant="outlined" />)}
-                </Stack>
-              </TableCell>
-              <TableCell>
-                <Chip
-                  label={STATUS_LABEL[r.status]}
-                  size="small"
-                  color={STATUS_COLOR[r.status]}
-                  variant={r.status === "maintenance" ? "outlined" : "filled"}
-                />
-              </TableCell>
-              <TableCell align="center">
-                <IconButton size="small" title="Просмотр"><VisibilityOutlined fontSize="small" /></IconButton>
-                <IconButton size="small" title="Редактировать"><EditOutlined fontSize="small" /></IconButton>
-                <IconButton size="small" color="error" title="Удалить"><DeleteOutline fontSize="small" /></IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <TablePagination
-        component="div"
-        count={total}
-        page={page}
-        onPageChange={(_, p) => setPage(p)}
-        rowsPerPage={rowsPerPage}
-        onRowsPerPageChange={(e) => {
-          setRowsPerPage(parseInt(e.target.value, 10));
-          setPage(0);
-        }}
-        rowsPerPageOptions={[5, 10, 25]}
-        labelRowsPerPage="На странице"
-      />
+    <Paper elevation={0} className="rooms-table-panel">
+      <div className="rooms-table-header">
+        <Typography fontWeight={600}>Список аудиторий</Typography>
+      </div>
+
+      {loading && items.length === 0 ? (
+        <Box sx={{ p: 4, display: "grid", placeItems: "center" }}>
+          <CircularProgress size={28} />
+        </Box>
+      ) : (
+        <>
+          <Table size="small" className="rooms-table">
+            <TableHead>
+              <TableRow>
+                <TableCell padding="checkbox">
+                  <Checkbox
+                    size="small"
+                    checked={allSelected}
+                    indeterminate={someSelected}
+                    onChange={toggleAll}
+                  />
+                </TableCell>
+                <TableCell>
+                  <span className="th-sort">Номер <ArrowUpward sx={{ fontSize: 14 }} /></span>
+                </TableCell>
+                <TableCell>Название</TableCell>
+                <TableCell>Местоположение</TableCell>
+                <TableCell>
+                  <span className="th-sort">Вместимость <ArrowDownward sx={{ fontSize: 14 }} /></span>
+                </TableCell>
+                <TableCell>Оборудование</TableCell>
+                <TableCell>Статус</TableCell>
+                <TableCell align="center">Действия</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {items.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8} align="center" sx={{ py: 4, color: "text.secondary" }}>
+                    Аудитории не найдены
+                  </TableCell>
+                </TableRow>
+              ) : items.map((r) => (
+                <TableRow key={r.id} hover selected={selected.has(r.id)}>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      size="small"
+                      checked={selected.has(r.id)}
+                      onChange={() => toggleOne(r.id)}
+                    />
+                  </TableCell>
+                  <TableCell className="room-code">{r.code}</TableCell>
+                  <TableCell>
+                    <Typography fontWeight={600} fontSize="0.875rem">{r.name}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Typography fontSize="0.875rem">{r.building}</Typography>
+                    <Typography variant="caption" color="text.secondary">{r.floor} этаж</Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Stack direction="row" spacing={0.5} alignItems="center">
+                      <Groups2Outlined sx={{ fontSize: 16, color: "#94a3b8" }} />
+                      <span>{r.capacity}</span>
+                    </Stack>
+                  </TableCell>
+                  <TableCell>
+                    <div className="equip-pills">
+                      {r.equipment.map((k) => (
+                        <span key={k} className={`equip-pill ${k}`}>
+                          {EQUIP_LABEL[k] ?? k}
+                        </span>
+                      ))}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <span className={`status-badge ${r.status}`}>
+                      {STATUS_LABEL[r.status]}
+                    </span>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Stack direction="row" spacing={0} justifyContent="center">
+                      <IconButton size="small" title="Просмотр"><VisibilityOutlined fontSize="small" /></IconButton>
+                      <IconButton size="small" title="Редактировать"><EditOutlined fontSize="small" /></IconButton>
+                      <IconButton size="small" color="error" title="Удалить"><DeleteOutline fontSize="small" /></IconButton>
+                    </Stack>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+
+          <TablePagination
+            component="div"
+            count={total}
+            page={page}
+            onPageChange={(_, p) => setPage(p)}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={(e) => {
+              setRowsPerPage(parseInt(e.target.value, 10));
+              setPage(0);
+            }}
+            rowsPerPageOptions={[10, 25, 50]}
+            labelRowsPerPage="Показать по"
+            labelDisplayedRows={({ from, to, count }) => `${from}–${to} из ${count}`}
+          />
+        </>
+      )}
     </Paper>
   );
 }
