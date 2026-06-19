@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Box } from "@mui/material";
-import { EMPTY_BOOKING_FILTERS, type BookingDto } from "@/api/bookingsApi";
+import { EMPTY_BOOKING_FILTERS } from "@/api/bookingsApi";
 import RecentChanges from "@/components/RoomsCatalog/RecentChanges";
 import "../RoomsCatalog/catalog.css";
 import "./bookings.css";
@@ -11,29 +11,35 @@ import { BookingsFilters } from "./BookingsFilters";
 import { OccupancyGrid } from "./OccupancyGrid";
 import { BookingsTable } from "./BookingsTable";
 import { UpcomingEvents } from "./UpcomingEvents";
-import { BookingDialog } from "./BookingDialog";
+import { NewBookingPage } from "./NewBookingPage";
+
+type View = "list" | "create" | "edit";
 
 export function BookingsPage() {
+  const [view, setView] = useState<View>("list");
+  const [editId, setEditId] = useState<string | null>(null);
   const [filters, setFilters] = useState({ ...EMPTY_BOOKING_FILTERS });
   const [refreshKey, setRefreshKey] = useState(0);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editing, setEditing] = useState<BookingDto | null>(null);
 
   const refresh = () => setRefreshKey((k) => k + 1);
 
-  const openCreate = () => {
-    setEditing(null);
-    setDialogOpen(true);
+  const goList = () => {
+    setView("list");
+    setEditId(null);
+    refresh();
   };
 
-  const openEdit = (booking: BookingDto) => {
-    setEditing(booking);
-    setDialogOpen(true);
-  };
+  if (view === "create") {
+    return <NewBookingPage onBack={goList} onSaved={goList} />;
+  }
+
+  if (view === "edit" && editId) {
+    return <NewBookingPage bookingId={editId} onBack={goList} onSaved={goList} />;
+  }
 
   return (
     <Box sx={{ maxWidth: 1400, mx: "auto", pb: 4, px: { xs: 2, md: 3 } }}>
-      <BookingsHeader onNewBooking={openCreate} />
+      <BookingsHeader onNewBooking={() => setView("create")} />
       <BookingsStatsCards refreshKey={refreshKey} />
 
       <Box mt={3}>
@@ -48,7 +54,10 @@ export function BookingsPage() {
         <BookingsTable
           filters={filters}
           refreshKey={refreshKey}
-          onEdit={openEdit}
+          onEdit={(b) => {
+            setEditId(b.id);
+            setView("edit");
+          }}
           onChanged={refresh}
         />
       </Box>
@@ -57,13 +66,6 @@ export function BookingsPage() {
         <RecentChanges refreshKey={refreshKey} />
         <UpcomingEvents refreshKey={refreshKey} />
       </Box>
-
-      <BookingDialog
-        open={dialogOpen}
-        booking={editing}
-        onClose={() => setDialogOpen(false)}
-        onSaved={refresh}
-      />
     </Box>
   );
 }

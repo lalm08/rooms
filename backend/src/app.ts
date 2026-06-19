@@ -2,6 +2,7 @@ import Fastify from 'fastify'
 import cors from '@fastify/cors'
 import helmet from '@fastify/helmet'
 import rateLimit from '@fastify/rate-limit'
+import type { Prisma } from './generated/prisma/index.js'
 import prismaPlugin from './plugins/prisma.js'
 import {
   buildRoomsWhere,
@@ -242,33 +243,52 @@ export async function buildApp() {
 
   app.get('/api/bookings/organizers', async () => getBookingOrganizers(app.prisma))
 
+  app.get('/api/bookings/:id', async (req, reply) => {
+    const { id } = req.params as { id: string }
+    const booking = await app.prisma.booking.findUnique({
+      where: { id },
+      include: { auditory: true, device: true },
+    })
+    if (!booking) {
+      reply.status(404).send({ error: 'Not found' })
+      return
+    }
+    return toBookingDto(booking)
+  })
+
   app.post('/api/bookings', async (req, reply) => {
     const body = req.body as {
       auditoryId: string
       deviceId?: string | null
       title?: string
+      description?: string
       organizer?: string
       organizerEmail?: string
       note?: string
       startAt: string
       endAt: string
       status?: string
+      details?: Record<string, unknown>
     }
     const booking = await app.prisma.booking.create({
       data: {
         auditoryId: body.auditoryId,
         deviceId: body.deviceId || null,
         title: body.title?.trim() ?? '',
+        description: body.description?.trim() || null,
         organizer: body.organizer?.trim() ?? '',
         organizerEmail: body.organizerEmail?.trim() ?? '',
         note: body.note?.trim() || null,
         startAt: new Date(body.startAt),
         endAt: new Date(body.endAt),
         status: body.status ?? 'confirmed',
+        details: (body.details ?? {}) as Prisma.InputJsonValue,
       },
       include: { auditory: true, device: true },
     })
-    await syncAuditoryStatus(app.prisma, body.auditoryId)
+    if (booking.status !== 'draft') {
+      await syncAuditoryStatus(app.prisma, body.auditoryId)
+    }
     reply.code(201)
     return toBookingDto(booking)
   })
@@ -279,12 +299,14 @@ export async function buildApp() {
       auditoryId?: string
       deviceId?: string | null
       title?: string
+      description?: string | null
       organizer?: string
       organizerEmail?: string
       note?: string | null
       startAt?: string
       endAt?: string
       status?: string
+      details?: Record<string, unknown>
     }
     try {
       const prev = await app.prisma.booking.findUnique({ where: { id } })
@@ -294,17 +316,19 @@ export async function buildApp() {
           ...(body.auditoryId !== undefined && { auditoryId: body.auditoryId }),
           ...(body.deviceId !== undefined && { deviceId: body.deviceId || null }),
           ...(body.title !== undefined && { title: body.title.trim() }),
+          ...(body.description !== undefined && { description: body.description?.trim() || null }),
           ...(body.organizer !== undefined && { organizer: body.organizer.trim() }),
           ...(body.organizerEmail !== undefined && { organizerEmail: body.organizerEmail.trim() }),
           ...(body.note !== undefined && { note: body.note?.trim() || null }),
           ...(body.startAt !== undefined && { startAt: new Date(body.startAt) }),
           ...(body.endAt !== undefined && { endAt: new Date(body.endAt) }),
           ...(body.status !== undefined && { status: body.status }),
+          ...(body.details !== undefined && { details: body.details as Prisma.InputJsonValue }),
         },
         include: { auditory: true, device: true },
       })
-      if (prev) await syncAuditoryStatus(app.prisma, prev.auditoryId)
-      await syncAuditoryStatus(app.prisma, booking.auditoryId)
+      if (prev && prev.status !== 'draft') await syncAuditoryStatus(app.prisma, prev.auditoryId)
+      if (booking.status !== 'draft') await syncAuditoryStatus(app.prisma, booking.auditoryId)
       return toBookingDto(booking)
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Unknown error'

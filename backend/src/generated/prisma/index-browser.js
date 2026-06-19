@@ -152,12 +152,14 @@ exports.Prisma.BookingScalarFieldEnum = {
   auditoryId: 'auditoryId',
   deviceId: 'deviceId',
   title: 'title',
+  description: 'description',
   organizer: 'organizer',
   organizerEmail: 'organizerEmail',
   note: 'note',
   startAt: 'startAt',
   endAt: 'endAt',
   status: 'status',
+  details: 'details',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -165,6 +167,10 @@ exports.Prisma.BookingScalarFieldEnum = {
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -175,6 +181,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 
 

@@ -17,6 +17,7 @@ import {
 } from "@/api/bookingsApi";
 
 const STATUS_LABEL: Record<BookingDto["status"], string> = {
+  draft: "Черновик",
   confirmed: "Подтверждено",
   pending: "Ожидает подтверждения",
   cancelled: "Отменено",

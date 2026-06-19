@@ -65,6 +65,7 @@ export function BookingsFilters({ filters, onChange }: Props) {
           onChange={(e) => onChange({ ...filters, status: e.target.value })}
         >
           <option value="">Все статусы</option>
+          <option value="draft">Черновик</option>
           <option value="confirmed">Подтверждено</option>
           <option value="pending">Ожидает подтверждения</option>
           <option value="cancelled">Отменено</option>

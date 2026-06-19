@@ -80,5 +80,7 @@ export const handlers = [
 
   msw.get("/api/bookings/organizers", () => HttpResponse.json([])),
 
+  msw.get("/api/bookings/:id", () => HttpResponse.json(null, { status: 404 })),
+
   msw.get("/api/auditories", () => HttpResponse.json([])),
 ];

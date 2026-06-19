@@ -124,12 +124,14 @@ exports.Prisma.BookingScalarFieldEnum = {
   auditoryId: 'auditoryId',
   deviceId: 'deviceId',
   title: 'title',
+  description: 'description',
   organizer: 'organizer',
   organizerEmail: 'organizerEmail',
   note: 'note',
   startAt: 'startAt',
   endAt: 'endAt',
   status: 'status',
+  details: 'details',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -137,6 +139,10 @@ exports.Prisma.BookingScalarFieldEnum = {
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
+};
+
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
 };
 
 exports.Prisma.QueryMode = {
@@ -147,6 +153,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 
 
@@ -204,13 +216,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id        String   @id @default(cuid())\n  email     String   @unique\n  name      String?\n  createdAt DateTime @default(now())\n}\n\nmodel Device {\n  id       String    @id @default(cuid())\n  name     String\n  bookings Booking[]\n}\n\nmodel Auditory {\n  id          String    @id @default(cuid())\n  code        String    @unique @default(cuid())\n  name        String\n  description String?\n  capacity    Int       @default(0)\n  status      String    @default(\"available\")\n  building    String    @default(\"Главный корпус\")\n  floor       Int       @default(1)\n  equipment   String[]  @default([])\n  createdAt   DateTime  @default(now())\n  updatedAt   DateTime  @default(now()) @updatedAt\n  bookings    Booking[]\n}\n\nmodel Booking {\n  id             String   @id @default(cuid())\n  auditoryId     String\n  deviceId       String?\n  title          String   @default(\"\")\n  organizer      String   @default(\"\")\n  organizerEmail String   @default(\"\")\n  note           String?\n  startAt        DateTime @default(now())\n  endAt          DateTime @default(now())\n  status         String   @default(\"confirmed\")\n  createdAt      DateTime @default(now())\n  updatedAt      DateTime @default(now()) @updatedAt\n\n  device   Device?  @relation(fields: [deviceId], references: [id])\n  auditory Auditory @relation(fields: [auditoryId], references: [id])\n}\n",
-  "inlineSchemaHash": "dfbd23c53dc3065629753cc27cc9552662cd4db74d8ace1436a67f90f254b33f",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../src/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id        String   @id @default(cuid())\n  email     String   @unique\n  name      String?\n  createdAt DateTime @default(now())\n}\n\nmodel Device {\n  id       String    @id @default(cuid())\n  name     String\n  bookings Booking[]\n}\n\nmodel Auditory {\n  id          String    @id @default(cuid())\n  code        String    @unique @default(cuid())\n  name        String\n  description String?\n  capacity    Int       @default(0)\n  status      String    @default(\"available\")\n  building    String    @default(\"Главный корпус\")\n  floor       Int       @default(1)\n  equipment   String[]  @default([])\n  createdAt   DateTime  @default(now())\n  updatedAt   DateTime  @default(now()) @updatedAt\n  bookings    Booking[]\n}\n\nmodel Booking {\n  id             String   @id @default(cuid())\n  auditoryId     String\n  deviceId       String?\n  title          String   @default(\"\")\n  description    String?\n  organizer      String   @default(\"\")\n  organizerEmail String   @default(\"\")\n  note           String?\n  startAt        DateTime @default(now())\n  endAt          DateTime @default(now())\n  status         String   @default(\"confirmed\")\n  details        Json     @default(\"{}\")\n  createdAt      DateTime @default(now())\n  updatedAt      DateTime @default(now()) @updatedAt\n\n  device   Device?  @relation(fields: [deviceId], references: [id])\n  auditory Auditory @relation(fields: [auditoryId], references: [id])\n}\n",
+  "inlineSchemaHash": "503a0647239a02964a35e72ba9235fb42bca372193a8fce5f830734650625d6e",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Device\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bookings\",\"kind\":\"object\",\"type\":\"Booking\",\"relationName\":\"BookingToDevice\"}],\"dbName\":null},\"Auditory\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"capacity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"building\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"floor\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"equipment\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"bookings\",\"kind\":\"object\",\"type\":\"Booking\",\"relationName\":\"AuditoryToBooking\"}],\"dbName\":null},\"Booking\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"auditoryId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"deviceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizer\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizerEmail\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"note\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"device\",\"kind\":\"object\",\"type\":\"Device\",\"relationName\":\"BookingToDevice\"},{\"name\":\"auditory\",\"kind\":\"object\",\"type\":\"Auditory\",\"relationName\":\"AuditoryToBooking\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Device\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bookings\",\"kind\":\"object\",\"type\":\"Booking\",\"relationName\":\"BookingToDevice\"}],\"dbName\":null},\"Auditory\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"code\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"capacity\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"building\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"floor\",\"kind\":\"scalar\",\"type\":\"Int\"},{\"name\":\"equipment\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"bookings\",\"kind\":\"object\",\"type\":\"Booking\",\"relationName\":\"AuditoryToBooking\"}],\"dbName\":null},\"Booking\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"auditoryId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"deviceId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizer\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"organizerEmail\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"note\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"status\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"details\",\"kind\":\"scalar\",\"type\":\"Json\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"device\",\"kind\":\"object\",\"type\":\"Device\",\"relationName\":\"BookingToDevice\"},{\"name\":\"auditory\",\"kind\":\"object\",\"type\":\"Auditory\",\"relationName\":\"AuditoryToBooking\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),

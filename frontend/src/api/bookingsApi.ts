@@ -1,6 +1,25 @@
 import { http } from "./http";
 
-export type BookingStatus = "pending" | "confirmed" | "cancelled";
+export type BookingStatus = "draft" | "pending" | "confirmed" | "cancelled";
+
+export interface BookingDetailsDto {
+  eventType?: string;
+  subject?: string;
+  format?: string;
+  prepMinutes?: string;
+  cleanupMinutes?: string;
+  recurring?: boolean;
+  backupAuditoryId?: string;
+  organizerPosition?: string;
+  organizerPhone?: string;
+  organizerDepartment?: string;
+  organizerFaculty?: string;
+  expectedParticipants?: string;
+  participantType?: string;
+  groups?: string[];
+  specialRequirements?: string;
+  equipment?: string[];
+}
 
 export interface BookingAuditoryDto {
   id: string;
@@ -21,6 +40,8 @@ export interface BookingDto {
   organizer: string;
   organizerEmail: string;
   note: string | null;
+  description: string | null;
+  details: BookingDetailsDto;
   startAt: string;
   endAt: string;
   status: BookingStatus;
@@ -70,12 +91,14 @@ export interface CreateBookingPayload {
   auditoryId: string;
   deviceId?: string | null;
   title: string;
+  description?: string;
   organizer: string;
   organizerEmail: string;
   note?: string;
   startAt: string;
   endAt: string;
   status?: BookingStatus;
+  details?: BookingDetailsDto;
 }
 
 export const EMPTY_BOOKING_FILTERS: BookingsFilters = {
@@ -121,6 +144,11 @@ export async function fetchUpcomingBookings(): Promise<BookingDto[]> {
 
 export async function fetchBookingOrganizers(): Promise<string[]> {
   const { data } = await http.get<string[]>("/bookings/organizers");
+  return data;
+}
+
+export async function fetchBooking(id: string): Promise<BookingDto> {
+  const { data } = await http.get<BookingDto>(`/bookings/${id}`);
   return data;
 }
 

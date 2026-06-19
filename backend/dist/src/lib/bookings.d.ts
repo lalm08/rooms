@@ -1,5 +1,23 @@
 import type { Prisma, PrismaClient } from '../generated/prisma/index.js';
-export type BookingStatus = 'pending' | 'confirmed' | 'cancelled';
+export type BookingStatus = 'draft' | 'pending' | 'confirmed' | 'cancelled';
+export type BookingDetails = {
+    eventType?: string;
+    subject?: string;
+    format?: string;
+    prepMinutes?: string;
+    cleanupMinutes?: string;
+    recurring?: boolean;
+    backupAuditoryId?: string;
+    organizerPosition?: string;
+    organizerPhone?: string;
+    organizerDepartment?: string;
+    organizerFaculty?: string;
+    expectedParticipants?: string;
+    participantType?: string;
+    groups?: string[];
+    specialRequirements?: string;
+    equipment?: string[];
+};
 export type BookingListQuery = {
     page?: number;
     limit?: number;
@@ -23,6 +41,8 @@ export declare function toBookingDto(booking: Prisma.BookingGetPayload<{
     organizer: string;
     organizerEmail: string;
     note: string | null;
+    description: string | null;
+    details: BookingDetails;
     startAt: string;
     endAt: string;
     status: BookingStatus;
@@ -71,6 +91,8 @@ export declare function getUpcomingBookings(prisma: PrismaClient, limit?: number
     organizer: string;
     organizerEmail: string;
     note: string | null;
+    description: string | null;
+    details: BookingDetails;
     startAt: string;
     endAt: string;
     status: BookingStatus;

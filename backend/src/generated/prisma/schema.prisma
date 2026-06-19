@@ -41,12 +41,14 @@ model Booking {
   auditoryId     String
   deviceId       String?
   title          String   @default("")
+  description    String?
   organizer      String   @default("")
   organizerEmail String   @default("")
   note           String?
   startAt        DateTime @default(now())
   endAt          DateTime @default(now())
   status         String   @default("confirmed")
+  details        Json     @default("{}")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @default(now()) @updatedAt
 

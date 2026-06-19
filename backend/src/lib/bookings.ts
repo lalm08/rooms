@@ -1,6 +1,25 @@
 import type { Prisma, PrismaClient } from '../generated/prisma/index.js'
 
-export type BookingStatus = 'pending' | 'confirmed' | 'cancelled'
+export type BookingStatus = 'draft' | 'pending' | 'confirmed' | 'cancelled'
+
+export type BookingDetails = {
+  eventType?: string
+  subject?: string
+  format?: string
+  prepMinutes?: string
+  cleanupMinutes?: string
+  recurring?: boolean
+  backupAuditoryId?: string
+  organizerPosition?: string
+  organizerPhone?: string
+  organizerDepartment?: string
+  organizerFaculty?: string
+  expectedParticipants?: string
+  participantType?: string
+  groups?: string[]
+  specialRequirements?: string
+  equipment?: string[]
+}
 
 export type BookingListQuery = {
   page?: number
@@ -28,6 +47,8 @@ export function toBookingDto(
     organizer: booking.organizer,
     organizerEmail: booking.organizerEmail,
     note: booking.note,
+    description: booking.description,
+    details: (booking.details ?? {}) as BookingDetails,
     startAt: booking.startAt.toISOString(),
     endAt: booking.endAt.toISOString(),
     status: booking.status as BookingStatus,
@@ -137,7 +158,7 @@ export async function getBookingsStats(prisma: PrismaClient) {
   const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1)
 
   const [total, activeToday, pending, cancelledThisWeek, monthBookings] = await Promise.all([
-    prisma.booking.count({ where: { status: { not: 'cancelled' } } }),
+    prisma.booking.count({ where: { status: { notIn: ['cancelled', 'draft'] } } }),
     prisma.booking.count({
       where: {
         status: { in: ACTIVE_STATUSES },

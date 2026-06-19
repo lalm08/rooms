@@ -185,6 +185,18 @@ export async function buildApp() {
     });
     app.get('/api/bookings/upcoming', async () => getUpcomingBookings(app.prisma, 3));
     app.get('/api/bookings/organizers', async () => getBookingOrganizers(app.prisma));
+    app.get('/api/bookings/:id', async (req, reply) => {
+        const { id } = req.params;
+        const booking = await app.prisma.booking.findUnique({
+            where: { id },
+            include: { auditory: true, device: true },
+        });
+        if (!booking) {
+            reply.status(404).send({ error: 'Not found' });
+            return;
+        }
+        return toBookingDto(booking);
+    });
     app.post('/api/bookings', async (req, reply) => {
         const body = req.body;
         const booking = await app.prisma.booking.create({
@@ -192,16 +204,20 @@ export async function buildApp() {
                 auditoryId: body.auditoryId,
                 deviceId: body.deviceId || null,
                 title: body.title?.trim() ?? '',
+                description: body.description?.trim() || null,
                 organizer: body.organizer?.trim() ?? '',
                 organizerEmail: body.organizerEmail?.trim() ?? '',
                 note: body.note?.trim() || null,
                 startAt: new Date(body.startAt),
                 endAt: new Date(body.endAt),
                 status: body.status ?? 'confirmed',
+                details: (body.details ?? {}),
             },
             include: { auditory: true, device: true },
         });
-        await syncAuditoryStatus(app.prisma, body.auditoryId);
+        if (booking.status !== 'draft') {
+            await syncAuditoryStatus(app.prisma, body.auditoryId);
+        }
         reply.code(201);
         return toBookingDto(booking);
     });
@@ -216,18 +232,21 @@ export async function buildApp() {
                     ...(body.auditoryId !== undefined && { auditoryId: body.auditoryId }),
                     ...(body.deviceId !== undefined && { deviceId: body.deviceId || null }),
                     ...(body.title !== undefined && { title: body.title.trim() }),
+                    ...(body.description !== undefined && { description: body.description?.trim() || null }),
                     ...(body.organizer !== undefined && { organizer: body.organizer.trim() }),
                     ...(body.organizerEmail !== undefined && { organizerEmail: body.organizerEmail.trim() }),
                     ...(body.note !== undefined && { note: body.note?.trim() || null }),
                     ...(body.startAt !== undefined && { startAt: new Date(body.startAt) }),
                     ...(body.endAt !== undefined && { endAt: new Date(body.endAt) }),
                     ...(body.status !== undefined && { status: body.status }),
+                    ...(body.details !== undefined && { details: body.details }),
                 },
                 include: { auditory: true, device: true },
             });
-            if (prev)
+            if (prev && prev.status !== 'draft')
                 await syncAuditoryStatus(app.prisma, prev.auditoryId);
-            await syncAuditoryStatus(app.prisma, booking.auditoryId);
+            if (booking.status !== 'draft')
+                await syncAuditoryStatus(app.prisma, booking.auditoryId);
             return toBookingDto(booking);
         }
         catch (error) {

@@ -4405,6 +4405,7 @@ export namespace Prisma {
     auditoryId: string | null
     deviceId: string | null
     title: string | null
+    description: string | null
     organizer: string | null
     organizerEmail: string | null
     note: string | null
@@ -4420,6 +4421,7 @@ export namespace Prisma {
     auditoryId: string | null
     deviceId: string | null
     title: string | null
+    description: string | null
     organizer: string | null
     organizerEmail: string | null
     note: string | null
@@ -4435,12 +4437,14 @@ export namespace Prisma {
     auditoryId: number
     deviceId: number
     title: number
+    description: number
     organizer: number
     organizerEmail: number
     note: number
     startAt: number
     endAt: number
     status: number
+    details: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -4452,6 +4456,7 @@ export namespace Prisma {
     auditoryId?: true
     deviceId?: true
     title?: true
+    description?: true
     organizer?: true
     organizerEmail?: true
     note?: true
@@ -4467,6 +4472,7 @@ export namespace Prisma {
     auditoryId?: true
     deviceId?: true
     title?: true
+    description?: true
     organizer?: true
     organizerEmail?: true
     note?: true
@@ -4482,12 +4488,14 @@ export namespace Prisma {
     auditoryId?: true
     deviceId?: true
     title?: true
+    description?: true
     organizer?: true
     organizerEmail?: true
     note?: true
     startAt?: true
     endAt?: true
     status?: true
+    details?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -4570,12 +4578,14 @@ export namespace Prisma {
     auditoryId: string
     deviceId: string | null
     title: string
+    description: string | null
     organizer: string
     organizerEmail: string
     note: string | null
     startAt: Date
     endAt: Date
     status: string
+    details: JsonValue
     createdAt: Date
     updatedAt: Date
     _count: BookingCountAggregateOutputType | null
@@ -4602,12 +4612,14 @@ export namespace Prisma {
     auditoryId?: boolean
     deviceId?: boolean
     title?: boolean
+    description?: boolean
     organizer?: boolean
     organizerEmail?: boolean
     note?: boolean
     startAt?: boolean
     endAt?: boolean
     status?: boolean
+    details?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     device?: boolean | Booking$deviceArgs<ExtArgs>
@@ -4619,12 +4631,14 @@ export namespace Prisma {
     auditoryId?: boolean
     deviceId?: boolean
     title?: boolean
+    description?: boolean
     organizer?: boolean
     organizerEmail?: boolean
     note?: boolean
     startAt?: boolean
     endAt?: boolean
     status?: boolean
+    details?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     device?: boolean | Booking$deviceArgs<ExtArgs>
@@ -4636,12 +4650,14 @@ export namespace Prisma {
     auditoryId?: boolean
     deviceId?: boolean
     title?: boolean
+    description?: boolean
     organizer?: boolean
     organizerEmail?: boolean
     note?: boolean
     startAt?: boolean
     endAt?: boolean
     status?: boolean
+    details?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     device?: boolean | Booking$deviceArgs<ExtArgs>
@@ -4653,17 +4669,19 @@ export namespace Prisma {
     auditoryId?: boolean
     deviceId?: boolean
     title?: boolean
+    description?: boolean
     organizer?: boolean
     organizerEmail?: boolean
     note?: boolean
     startAt?: boolean
     endAt?: boolean
     status?: boolean
+    details?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "auditoryId" | "deviceId" | "title" | "organizer" | "organizerEmail" | "note" | "startAt" | "endAt" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["booking"]>
+  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "auditoryId" | "deviceId" | "title" | "description" | "organizer" | "organizerEmail" | "note" | "startAt" | "endAt" | "status" | "details" | "createdAt" | "updatedAt", ExtArgs["result"]["booking"]>
   export type BookingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     device?: boolean | Booking$deviceArgs<ExtArgs>
     auditory?: boolean | AuditoryDefaultArgs<ExtArgs>
@@ -4688,12 +4706,14 @@ export namespace Prisma {
       auditoryId: string
       deviceId: string | null
       title: string
+      description: string | null
       organizer: string
       organizerEmail: string
       note: string | null
       startAt: Date
       endAt: Date
       status: string
+      details: Prisma.JsonValue
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["booking"]>
@@ -5125,12 +5145,14 @@ export namespace Prisma {
     readonly auditoryId: FieldRef<"Booking", 'String'>
     readonly deviceId: FieldRef<"Booking", 'String'>
     readonly title: FieldRef<"Booking", 'String'>
+    readonly description: FieldRef<"Booking", 'String'>
     readonly organizer: FieldRef<"Booking", 'String'>
     readonly organizerEmail: FieldRef<"Booking", 'String'>
     readonly note: FieldRef<"Booking", 'String'>
     readonly startAt: FieldRef<"Booking", 'DateTime'>
     readonly endAt: FieldRef<"Booking", 'DateTime'>
     readonly status: FieldRef<"Booking", 'String'>
+    readonly details: FieldRef<"Booking", 'Json'>
     readonly createdAt: FieldRef<"Booking", 'DateTime'>
     readonly updatedAt: FieldRef<"Booking", 'DateTime'>
   }
@@ -5620,12 +5642,14 @@ export namespace Prisma {
     auditoryId: 'auditoryId',
     deviceId: 'deviceId',
     title: 'title',
+    description: 'description',
     organizer: 'organizer',
     organizerEmail: 'organizerEmail',
     note: 'note',
     startAt: 'startAt',
     endAt: 'endAt',
     status: 'status',
+    details: 'details',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -5639,6 +5663,13 @@ export namespace Prisma {
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
+
+
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
   export const QueryMode: {
@@ -5655,6 +5686,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -5701,6 +5741,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -5903,12 +5957,14 @@ export namespace Prisma {
     auditoryId?: StringFilter<"Booking"> | string
     deviceId?: StringNullableFilter<"Booking"> | string | null
     title?: StringFilter<"Booking"> | string
+    description?: StringNullableFilter<"Booking"> | string | null
     organizer?: StringFilter<"Booking"> | string
     organizerEmail?: StringFilter<"Booking"> | string
     note?: StringNullableFilter<"Booking"> | string | null
     startAt?: DateTimeFilter<"Booking"> | Date | string
     endAt?: DateTimeFilter<"Booking"> | Date | string
     status?: StringFilter<"Booking"> | string
+    details?: JsonFilter<"Booking">
     createdAt?: DateTimeFilter<"Booking"> | Date | string
     updatedAt?: DateTimeFilter<"Booking"> | Date | string
     device?: XOR<DeviceNullableScalarRelationFilter, DeviceWhereInput> | null
@@ -5920,12 +5976,14 @@ export namespace Prisma {
     auditoryId?: SortOrder
     deviceId?: SortOrderInput | SortOrder
     title?: SortOrder
+    description?: SortOrderInput | SortOrder
     organizer?: SortOrder
     organizerEmail?: SortOrder
     note?: SortOrderInput | SortOrder
     startAt?: SortOrder
     endAt?: SortOrder
     status?: SortOrder
+    details?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     device?: DeviceOrderByWithRelationInput
@@ -5940,12 +5998,14 @@ export namespace Prisma {
     auditoryId?: StringFilter<"Booking"> | string
     deviceId?: StringNullableFilter<"Booking"> | string | null
     title?: StringFilter<"Booking"> | string
+    description?: StringNullableFilter<"Booking"> | string | null
     organizer?: StringFilter<"Booking"> | string
     organizerEmail?: StringFilter<"Booking"> | string
     note?: StringNullableFilter<"Booking"> | string | null
     startAt?: DateTimeFilter<"Booking"> | Date | string
     endAt?: DateTimeFilter<"Booking"> | Date | string
     status?: StringFilter<"Booking"> | string
+    details?: JsonFilter<"Booking">
     createdAt?: DateTimeFilter<"Booking"> | Date | string
     updatedAt?: DateTimeFilter<"Booking"> | Date | string
     device?: XOR<DeviceNullableScalarRelationFilter, DeviceWhereInput> | null
@@ -5957,12 +6017,14 @@ export namespace Prisma {
     auditoryId?: SortOrder
     deviceId?: SortOrderInput | SortOrder
     title?: SortOrder
+    description?: SortOrderInput | SortOrder
     organizer?: SortOrder
     organizerEmail?: SortOrder
     note?: SortOrderInput | SortOrder
     startAt?: SortOrder
     endAt?: SortOrder
     status?: SortOrder
+    details?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: BookingCountOrderByAggregateInput
@@ -5978,12 +6040,14 @@ export namespace Prisma {
     auditoryId?: StringWithAggregatesFilter<"Booking"> | string
     deviceId?: StringNullableWithAggregatesFilter<"Booking"> | string | null
     title?: StringWithAggregatesFilter<"Booking"> | string
+    description?: StringNullableWithAggregatesFilter<"Booking"> | string | null
     organizer?: StringWithAggregatesFilter<"Booking"> | string
     organizerEmail?: StringWithAggregatesFilter<"Booking"> | string
     note?: StringNullableWithAggregatesFilter<"Booking"> | string | null
     startAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
     endAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
     status?: StringWithAggregatesFilter<"Booking"> | string
+    details?: JsonWithAggregatesFilter<"Booking">
     createdAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
   }
@@ -6181,12 +6245,14 @@ export namespace Prisma {
   export type BookingCreateInput = {
     id?: string
     title?: string
+    description?: string | null
     organizer?: string
     organizerEmail?: string
     note?: string | null
     startAt?: Date | string
     endAt?: Date | string
     status?: string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     device?: DeviceCreateNestedOneWithoutBookingsInput
@@ -6198,12 +6264,14 @@ export namespace Prisma {
     auditoryId: string
     deviceId?: string | null
     title?: string
+    description?: string | null
     organizer?: string
     organizerEmail?: string
     note?: string | null
     startAt?: Date | string
     endAt?: Date | string
     status?: string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6211,12 +6279,14 @@ export namespace Prisma {
   export type BookingUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     organizer?: StringFieldUpdateOperationsInput | string
     organizerEmail?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     startAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     device?: DeviceUpdateOneWithoutBookingsNestedInput
@@ -6228,12 +6298,14 @@ export namespace Prisma {
     auditoryId?: StringFieldUpdateOperationsInput | string
     deviceId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     organizer?: StringFieldUpdateOperationsInput | string
     organizerEmail?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     startAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6243,12 +6315,14 @@ export namespace Prisma {
     auditoryId: string
     deviceId?: string | null
     title?: string
+    description?: string | null
     organizer?: string
     organizerEmail?: string
     note?: string | null
     startAt?: Date | string
     endAt?: Date | string
     status?: string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6256,12 +6330,14 @@ export namespace Prisma {
   export type BookingUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     organizer?: StringFieldUpdateOperationsInput | string
     organizerEmail?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     startAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6271,12 +6347,14 @@ export namespace Prisma {
     auditoryId?: StringFieldUpdateOperationsInput | string
     deviceId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     organizer?: StringFieldUpdateOperationsInput | string
     organizerEmail?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     startAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6507,6 +6585,29 @@ export namespace Prisma {
     _min?: NestedIntFilter<$PrismaModel>
     _max?: NestedIntFilter<$PrismaModel>
   }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type DeviceNullableScalarRelationFilter = {
     is?: DeviceWhereInput | null
@@ -6523,12 +6624,14 @@ export namespace Prisma {
     auditoryId?: SortOrder
     deviceId?: SortOrder
     title?: SortOrder
+    description?: SortOrder
     organizer?: SortOrder
     organizerEmail?: SortOrder
     note?: SortOrder
     startAt?: SortOrder
     endAt?: SortOrder
     status?: SortOrder
+    details?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6538,6 +6641,7 @@ export namespace Prisma {
     auditoryId?: SortOrder
     deviceId?: SortOrder
     title?: SortOrder
+    description?: SortOrder
     organizer?: SortOrder
     organizerEmail?: SortOrder
     note?: SortOrder
@@ -6553,6 +6657,7 @@ export namespace Prisma {
     auditoryId?: SortOrder
     deviceId?: SortOrder
     title?: SortOrder
+    description?: SortOrder
     organizer?: SortOrder
     organizerEmail?: SortOrder
     note?: SortOrder
@@ -6561,6 +6666,32 @@ export namespace Prisma {
     status?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -6841,16 +6972,41 @@ export namespace Prisma {
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
   }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type BookingCreateWithoutDeviceInput = {
     id?: string
     title?: string
+    description?: string | null
     organizer?: string
     organizerEmail?: string
     note?: string | null
     startAt?: Date | string
     endAt?: Date | string
     status?: string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     auditory: AuditoryCreateNestedOneWithoutBookingsInput
@@ -6860,12 +7016,14 @@ export namespace Prisma {
     id?: string
     auditoryId: string
     title?: string
+    description?: string | null
     organizer?: string
     organizerEmail?: string
     note?: string | null
     startAt?: Date | string
     endAt?: Date | string
     status?: string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -6904,12 +7062,14 @@ export namespace Prisma {
     auditoryId?: StringFilter<"Booking"> | string
     deviceId?: StringNullableFilter<"Booking"> | string | null
     title?: StringFilter<"Booking"> | string
+    description?: StringNullableFilter<"Booking"> | string | null
     organizer?: StringFilter<"Booking"> | string
     organizerEmail?: StringFilter<"Booking"> | string
     note?: StringNullableFilter<"Booking"> | string | null
     startAt?: DateTimeFilter<"Booking"> | Date | string
     endAt?: DateTimeFilter<"Booking"> | Date | string
     status?: StringFilter<"Booking"> | string
+    details?: JsonFilter<"Booking">
     createdAt?: DateTimeFilter<"Booking"> | Date | string
     updatedAt?: DateTimeFilter<"Booking"> | Date | string
   }
@@ -6917,12 +7077,14 @@ export namespace Prisma {
   export type BookingCreateWithoutAuditoryInput = {
     id?: string
     title?: string
+    description?: string | null
     organizer?: string
     organizerEmail?: string
     note?: string | null
     startAt?: Date | string
     endAt?: Date | string
     status?: string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     device?: DeviceCreateNestedOneWithoutBookingsInput
@@ -6932,12 +7094,14 @@ export namespace Prisma {
     id?: string
     deviceId?: string | null
     title?: string
+    description?: string | null
     organizer?: string
     organizerEmail?: string
     note?: string | null
     startAt?: Date | string
     endAt?: Date | string
     status?: string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7080,12 +7244,14 @@ export namespace Prisma {
     id?: string
     auditoryId: string
     title?: string
+    description?: string | null
     organizer?: string
     organizerEmail?: string
     note?: string | null
     startAt?: Date | string
     endAt?: Date | string
     status?: string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7093,12 +7259,14 @@ export namespace Prisma {
   export type BookingUpdateWithoutDeviceInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     organizer?: StringFieldUpdateOperationsInput | string
     organizerEmail?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     startAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     auditory?: AuditoryUpdateOneRequiredWithoutBookingsNestedInput
@@ -7108,12 +7276,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     auditoryId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     organizer?: StringFieldUpdateOperationsInput | string
     organizerEmail?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     startAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7122,12 +7292,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     auditoryId?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     organizer?: StringFieldUpdateOperationsInput | string
     organizerEmail?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     startAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7136,12 +7308,14 @@ export namespace Prisma {
     id?: string
     deviceId?: string | null
     title?: string
+    description?: string | null
     organizer?: string
     organizerEmail?: string
     note?: string | null
     startAt?: Date | string
     endAt?: Date | string
     status?: string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -7149,12 +7323,14 @@ export namespace Prisma {
   export type BookingUpdateWithoutAuditoryInput = {
     id?: StringFieldUpdateOperationsInput | string
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     organizer?: StringFieldUpdateOperationsInput | string
     organizerEmail?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     startAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     device?: DeviceUpdateOneWithoutBookingsNestedInput
@@ -7164,12 +7340,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     deviceId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     organizer?: StringFieldUpdateOperationsInput | string
     organizerEmail?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     startAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -7178,12 +7356,14 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     deviceId?: NullableStringFieldUpdateOperationsInput | string | null
     title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
     organizer?: StringFieldUpdateOperationsInput | string
     organizerEmail?: StringFieldUpdateOperationsInput | string
     note?: NullableStringFieldUpdateOperationsInput | string | null
     startAt?: DateTimeFieldUpdateOperationsInput | Date | string
     endAt?: DateTimeFieldUpdateOperationsInput | Date | string
     status?: StringFieldUpdateOperationsInput | string
+    details?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

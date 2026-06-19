@@ -11,6 +11,8 @@ export function toBookingDto(booking) {
         organizer: booking.organizer,
         organizerEmail: booking.organizerEmail,
         note: booking.note,
+        description: booking.description,
+        details: (booking.details ?? {}),
         startAt: booking.startAt.toISOString(),
         endAt: booking.endAt.toISOString(),
         status: booking.status,
@@ -109,7 +111,7 @@ export async function getBookingsStats(prisma) {
     const monthStart = startOfMonth(now);
     const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 1);
     const [total, activeToday, pending, cancelledThisWeek, monthBookings] = await Promise.all([
-        prisma.booking.count({ where: { status: { not: 'cancelled' } } }),
+        prisma.booking.count({ where: { status: { notIn: ['cancelled', 'draft'] } } }),
         prisma.booking.count({
             where: {
                 status: { in: ACTIVE_STATUSES },
