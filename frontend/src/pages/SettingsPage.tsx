@@ -23,7 +23,7 @@ type Auditory = {
 };
 
 const DEFAULT_BUILDINGS = ["Главный корпус", "Корпус Б"];
-const FLOORS = [1, 2, 3, 4];
+const FLOORS = [1, 2, 3, 4, 5];
 
 function deviceIdsToNames(devices: Device[], ids: string[]) {
   return ids.map((id) => devices.find((d) => d.id === id)?.name ?? id);
@@ -75,8 +75,14 @@ function EquipmentPicker({
   );
 }
 
-export function SettingsPage() {
-  const [tab, setTab] = useState(0);
+export function SettingsPage({
+  initialTab = 0,
+  onTabChange,
+}: {
+  initialTab?: number;
+  onTabChange?: (tab: number) => void;
+}) {
+  const [tab, setTab] = useState(initialTab);
   const [devices, setDevices] = useState<Device[]>([]);
   const [auditories, setAuditories] = useState<Auditory[]>([]);
   const [buildings, setBuildings] = useState<string[]>(DEFAULT_BUILDINGS);
@@ -118,6 +124,8 @@ export function SettingsPage() {
       if (b.length) setBuildings([...new Set([...DEFAULT_BUILDINGS, ...b])]);
     } catch { /* use defaults */ }
   };
+
+  useEffect(() => { setTab(initialTab); }, [initialTab]);
 
   useEffect(() => { loadAll(); }, []);
 
@@ -221,7 +229,14 @@ export function SettingsPage() {
         Управление устройствами и аудиториями
       </Typography>
 
-      <Tabs value={tab} onChange={(_, v) => setTab(v)} sx={{ mb: 3 }}>
+      <Tabs
+        value={tab}
+        onChange={(_, v) => {
+          setTab(v);
+          onTabChange?.(v);
+        }}
+        sx={{ mb: 3 }}
+      >
         <Tab label="Устройства" />
         <Tab label="Аудитории" />
       </Tabs>

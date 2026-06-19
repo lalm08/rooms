@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
 import {
   Paper, Table, TableHead, TableRow, TableCell, TableBody,
-  CircularProgress, Box, IconButton, Stack, Typography,
+  CircularProgress, Box, Stack, Typography,
   Checkbox, TablePagination,
 } from "@mui/material";
-import {
-  VisibilityOutlined, EditOutlined, DeleteOutline, Groups2Outlined,
-  ArrowUpward, ArrowDownward,
-} from "@mui/icons-material";
+import { Groups2Outlined, ArrowUpward, ArrowDownward } from "@mui/icons-material";
 import { fetchRooms, type RoomDto, type RoomsFilters } from "@/api/roomsApi";
 import { roomsPayload } from "@/mocks/data";
 
@@ -17,18 +14,27 @@ const STATUS_LABEL: Record<RoomDto["status"], string> = {
   maintenance: "На обслуживании",
 };
 
-const EQUIP_LABEL: Record<string, string> = {
-  projector: "Проектор",
-  microphone: "Микрофон",
-  wifi: "Wi-Fi",
-  computers: "Компьютеры",
-  board: "Доска",
-  ac: "Кондиционер",
-  video: "Видеосвязь",
-};
-
 function equipLabel(key: string) {
-  return EQUIP_LABEL[key] ?? key;
+  return key;
+}
+
+function filterItemsLocally(items: RoomDto[], filters: RoomsFilters) {
+  return items.filter((r) => {
+    if (filters.search) {
+      const q = filters.search.toLowerCase();
+      if (!r.code.toLowerCase().includes(q) && !r.name.toLowerCase().includes(q)) return false;
+    }
+    if (filters.building && r.building !== filters.building) return false;
+    if (filters.floor && r.floor !== Number(filters.floor)) return false;
+    if (filters.status && r.status !== filters.status) return false;
+    if (filters.equipment.length) {
+      const hasAll = filters.equipment.every((eq) =>
+        r.equipment.some((item) => item.toLowerCase() === eq.toLowerCase())
+      );
+      if (!hasAll) return false;
+    }
+    return true;
+  });
 }
 
 type Props = {
@@ -60,8 +66,10 @@ export function RoomsTable({ filters }: Props) {
         }
       } catch {
         if (mounted) {
-          setItems(roomsPayload.items);
-          setTotal(roomsPayload.total);
+          const filtered = filterItemsLocally(roomsPayload.items, filters);
+          const start = page * rowsPerPage;
+          setItems(filtered.slice(start, start + rowsPerPage));
+          setTotal(filtered.length);
         }
       } finally {
         if (mounted) setLoading(false);
@@ -118,13 +126,12 @@ export function RoomsTable({ filters }: Props) {
                 </TableCell>
                 <TableCell>Оборудование</TableCell>
                 <TableCell>Статус</TableCell>
-                <TableCell align="center">Действия</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {items.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} align="center" sx={{ py: 4, color: "text.secondary" }}>
+                  <TableCell colSpan={7} align="center" sx={{ py: 4, color: "text.secondary" }}>
                     Аудитории не найдены
                   </TableCell>
                 </TableRow>
@@ -154,7 +161,7 @@ export function RoomsTable({ filters }: Props) {
                   <TableCell>
                     <div className="equip-pills">
                       {r.equipment.map((k) => (
-                        <span key={k} className={`equip-pill ${k}`}>
+                        <span key={k} className="equip-pill generic">
                           {equipLabel(k)}
                         </span>
                       ))}
@@ -164,13 +171,6 @@ export function RoomsTable({ filters }: Props) {
                     <span className={`status-badge ${r.status}`}>
                       {STATUS_LABEL[r.status]}
                     </span>
-                  </TableCell>
-                  <TableCell align="center">
-                    <Stack direction="row" spacing={0} justifyContent="center">
-                      <IconButton size="small" title="Просмотр"><VisibilityOutlined fontSize="small" /></IconButton>
-                      <IconButton size="small" title="Редактировать"><EditOutlined fontSize="small" /></IconButton>
-                      <IconButton size="small" color="error" title="Удалить"><DeleteOutline fontSize="small" /></IconButton>
-                    </Stack>
                   </TableCell>
                 </TableRow>
               ))}
