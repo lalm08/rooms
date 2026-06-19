@@ -26,6 +26,40 @@
   white-space: nowrap;
 }
 
+.booking-step-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.booking-step-icon.active,
+.booking-step-icon.completed {
+  background: #2563eb;
+}
+
+.booking-step-icon.pending {
+  background: #cbd5e1;
+  color: #fff;
+}
+
+.new-booking-stepper .MuiStepConnector-line {
+  border-top-width: 2px;
+  border-color: #e2e8f0;
+}
+
+.new-booking-stepper .MuiStepConnector-root.Mui-completed .MuiStepConnector-line {
+  border-color: #2563eb;
+}
+
+.new-booking-stepper .MuiStepConnector-root.Mui-active .MuiStepConnector-line {
+  border-color: #e2e8f0;
+}
+
 .form-section {
   padding: 24px;
   border-radius: 12px;

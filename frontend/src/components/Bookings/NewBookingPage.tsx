@@ -2,8 +2,9 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import {
   Box, Typography, TextField, MenuItem, Checkbox, FormControlLabel,
   CircularProgress, Dialog, DialogTitle, DialogContent, DialogActions, Button,
-  Stepper, Step, StepLabel,
+  Stepper, Step, StepLabel, type StepIconProps,
 } from "@mui/material";
+import Check from "@mui/icons-material/Check";
 import ArrowBackOutlined from "@mui/icons-material/ArrowBackOutlined";
 import SaveOutlined from "@mui/icons-material/SaveOutlined";
 import VisibilityOutlined from "@mui/icons-material/VisibilityOutlined";
@@ -198,7 +199,6 @@ export function NewBookingPage({ bookingId, onBack, onSaved }: Props) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
 
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
 
@@ -230,18 +230,33 @@ export function NewBookingPage({ bookingId, onBack, onSaved }: Props) {
     return r ? `${r.code} — ${r.name}` : "Не указана";
   };
 
-  const stepComplete = useMemo(() => [
-    Boolean(form.title.trim()),
-    Boolean(form.startDate && form.startTime && form.endTime),
-    Boolean(form.auditoryId),
-    Boolean(form.organizer.trim() || form.expectedParticipants),
-    true,
-    Boolean(form.auditoryId && form.title.trim()),
-  ], [form]);
+  const stepComplete = useMemo(() => {
+    const datetimeOk = Boolean(
+      form.startDate && form.endDate && form.startTime && form.endTime
+      && new Date(combineDateTime(form.endDate, form.endTime)) > new Date(combineDateTime(form.startDate, form.startTime)),
+    );
+    const participantsOk = Boolean(
+      form.organizer.trim()
+      || form.expectedParticipants
+      || form.groups.length > 0
+      || form.participantType,
+    );
+    const equipmentOk = form.equipment.length > 0;
+    const confirmOk = Boolean(form.title.trim() && form.auditoryId && datetimeOk && participantsOk);
 
-  useEffect(() => {
-    const idx = stepComplete.findIndex((ok, i) => i < 5 && !ok);
-    setActiveStep(idx === -1 ? 5 : idx);
+    return [
+      Boolean(form.title.trim()),
+      datetimeOk,
+      Boolean(form.auditoryId),
+      participantsOk,
+      equipmentOk,
+      confirmOk,
+    ];
+  }, [form]);
+
+  const activeStep = useMemo(() => {
+    const idx = stepComplete.findIndex((ok) => !ok);
+    return idx === -1 ? STEPS.length - 1 : idx;
   }, [stepComplete]);
 
   const scrollToStep = (index: number) => {
@@ -598,6 +613,21 @@ export function NewBookingPage({ bookingId, onBack, onSaved }: Props) {
   );
 }
 
+function BookingStepIcon({ icon, active, completed }: StepIconProps) {
+  if (completed) {
+    return (
+      <div className="booking-step-icon completed">
+        <Check sx={{ fontSize: 18, color: "#fff" }} />
+      </div>
+    );
+  }
+  return (
+    <div className={`booking-step-icon ${active ? "active" : "pending"}`}>
+      {icon}
+    </div>
+  );
+}
+
 function PaperStepper({
   activeStep,
   stepComplete,
@@ -611,8 +641,24 @@ function PaperStepper({
     <div className="new-booking-stepper">
       <Stepper activeStep={activeStep} alternativeLabel>
         {STEPS.map((label, i) => (
-          <Step key={label} completed={stepComplete[i]} onClick={() => onStepClick(i)} sx={{ cursor: "pointer" }}>
-            <StepLabel>{label}</StepLabel>
+          <Step
+            key={label}
+            completed={stepComplete[i]}
+            active={!stepComplete[i] && i === activeStep}
+            onClick={() => onStepClick(i)}
+            sx={{ cursor: "pointer" }}
+          >
+            <StepLabel
+              StepIconComponent={BookingStepIcon}
+              sx={{
+                "& .MuiStepLabel-label": {
+                  color: stepComplete[i] || i === activeStep ? "#2563eb" : "#94a3b8",
+                  fontWeight: stepComplete[i] || i === activeStep ? 600 : 400,
+                },
+              }}
+            >
+              {label}
+            </StepLabel>
           </Step>
         ))}
       </Stepper>
