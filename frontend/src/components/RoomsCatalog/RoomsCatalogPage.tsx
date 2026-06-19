@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box } from "@mui/material";
 import { RoomsTable } from "@/components/RoomsTable/RoomsTable";
-import type { RoomsFilters } from "@/api/roomsApi";
+import type { RoomsFilters as RoomsFiltersState } from "@/api/roomsApi";
 
 import RoomsCatalogHeader from "./RoomsCatalogHeader";
 import RoomsStatsCards from "./RoomsStatsCards";
@@ -11,7 +11,7 @@ import BuildingSchema from "./BuildingSchema";
 import "./catalog.css";
 
 export function RoomsCatalogPage() {
-  const [filters, setFilters] = useState<RoomsFilters>({ ...EMPTY_FILTERS });
+  const [filters, setFilters] = useState<RoomsFiltersState>({ ...EMPTY_FILTERS });
 
   return (
     <Box sx={{ maxWidth: 1400, mx: "auto", pb: 4, px: { xs: 2, md: 3 } }}>
