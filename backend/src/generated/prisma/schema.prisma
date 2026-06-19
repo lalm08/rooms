@@ -23,7 +23,7 @@ model Device {
 
 model Auditory {
   id          String    @id @default(cuid())
-  code        String    @unique
+  code        String    @unique @default(cuid())
   name        String
   description String?
   capacity    Int       @default(0)
@@ -32,16 +32,24 @@ model Auditory {
   floor       Int       @default(1)
   equipment   String[]  @default([])
   createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  updatedAt   DateTime  @default(now()) @updatedAt
   bookings    Booking[]
 }
 
 model Booking {
-  id         String   @id @default(cuid())
-  deviceId   String
-  auditoryId String
-  createdAt  DateTime @default(now())
+  id             String   @id @default(cuid())
+  auditoryId     String
+  deviceId       String?
+  title          String   @default("")
+  organizer      String   @default("")
+  organizerEmail String   @default("")
+  note           String?
+  startAt        DateTime @default(now())
+  endAt          DateTime @default(now())
+  status         String   @default("confirmed")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
 
-  device   Device   @relation(fields: [deviceId], references: [id])
+  device   Device?  @relation(fields: [deviceId], references: [id])
   auditory Auditory @relation(fields: [auditoryId], references: [id])
 }

@@ -149,9 +149,17 @@ exports.Prisma.AuditoryScalarFieldEnum = {
 
 exports.Prisma.BookingScalarFieldEnum = {
   id: 'id',
-  deviceId: 'deviceId',
   auditoryId: 'auditoryId',
-  createdAt: 'createdAt'
+  deviceId: 'deviceId',
+  title: 'title',
+  organizer: 'organizer',
+  organizerEmail: 'organizerEmail',
+  note: 'note',
+  startAt: 'startAt',
+  endAt: 'endAt',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.SortOrder = {

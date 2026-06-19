@@ -18,7 +18,7 @@ function formatRelativeTime(iso: string) {
   return `${days} дн. назад`;
 }
 
-function RecentChanges() {
+function RecentChanges({ refreshKey = 0 }: { refreshKey?: number }) {
   const [changes, setChanges] = useState<Array<{ type: string; text: string; at: string }>>([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,7 +33,7 @@ function RecentChanges() {
       }
     })();
     return () => { mounted = false; };
-  }, []);
+  }, [refreshKey]);
 
   return (
     <Paper elevation={0} sx={{ p: 3, borderRadius: 2, border: "1px solid #e5e7eb", height: "100%" }}>

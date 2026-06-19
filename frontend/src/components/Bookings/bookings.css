@@ -1,0 +1,221 @@
+/* --- Страница бронирований --- */
+.stats-grid-5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1200px) {
+  .stats-grid-5 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .stats-grid-5 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stats-badge.red {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.stats-badge.purple {
+  background: #f3e8ff;
+  color: #9333ea;
+}
+
+.stats-icon-box.red { background: #fef2f2; color: #dc2626; }
+
+/* --- Сетка занятости --- */
+.occupancy-panel {
+  padding: 20px 24px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  overflow-x: auto;
+}
+
+.occupancy-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.occupancy-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.occ-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.occ-dot.free { background: #ecfdf5; border: 1px solid #a7f3d0; }
+.occ-dot.occupied { background: #dbeafe; border: 1px solid #93c5fd; }
+.occ-dot.preparation { background: #fff7ed; border: 1px solid #fdba74; }
+.occ-dot.unavailable { background: #f1f5f9; border: 1px solid #cbd5e1; }
+
+.occupancy-grid-header {
+  display: grid;
+  grid-template-columns: 140px repeat(12, 1fr);
+  gap: 4px;
+  margin-bottom: 4px;
+  min-width: 640px;
+}
+
+.occupancy-hour {
+  text-align: center;
+  font-size: 0.6875rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.occupancy-row {
+  display: grid;
+  grid-template-columns: 140px repeat(12, 1fr);
+  gap: 4px;
+  align-items: center;
+  min-width: 640px;
+  margin-bottom: 4px;
+}
+
+.occupancy-room-label {
+  font-size: 0.8125rem;
+  padding-right: 8px;
+}
+
+.occupancy-room-label strong {
+  display: block;
+  color: #1e293b;
+  font-weight: 600;
+}
+
+.occupancy-room-label span {
+  color: #94a3b8;
+  font-size: 0.75rem;
+}
+
+.occ-cell {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  min-height: 28px;
+}
+
+.occ-cell.free { background: #ecfdf5; }
+.occ-cell.occupied { background: #3b82f6; }
+.occ-cell.preparation { background: #f97316; }
+.occ-cell.unavailable { background: #e2e8f0; }
+
+/* --- Статусы бронирований --- */
+.booking-status {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.booking-status.confirmed { background: #ecfdf5; color: #10b981; }
+.booking-status.pending { background: #fff7ed; color: #f97316; }
+.booking-status.cancelled { background: #fef2f2; color: #dc2626; }
+
+.organizer-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.organizer-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.upcoming-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .upcoming-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.upcoming-card {
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+}
+
+.upcoming-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.upcoming-room {
+  font-weight: 700;
+  font-size: 0.9375rem;
+  color: #1e293b;
+}
+
+.upcoming-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.upcoming-label {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.upcoming-title {
+  font-weight: 600;
+  font-size: 0.875rem;
+  margin: 8px 0 4px;
+  color: #1e293b;
+}
+
+.upcoming-meta {
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.bookings-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1000px) {
+  .bookings-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -56,4 +56,29 @@ export const handlers = [
       { type: "add", text: "Добавлена аудитория 301", at: new Date().toISOString() },
     ])
   ),
+
+  msw.get("/api/bookings", () =>
+    HttpResponse.json({ items: [], page: 1, limit: 15, total: 0 })
+  ),
+
+  msw.get("/api/bookings/stats", () =>
+    HttpResponse.json({
+      total: 0,
+      activeToday: 0,
+      pending: 0,
+      cancelledThisWeek: 0,
+      hoursThisMonth: 0,
+      usagePercent: 0,
+    })
+  ),
+
+  msw.get("/api/bookings/occupancy", () =>
+    HttpResponse.json({ date: new Date().toISOString().slice(0, 10), hours: [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19], rows: [] })
+  ),
+
+  msw.get("/api/bookings/upcoming", () => HttpResponse.json([])),
+
+  msw.get("/api/bookings/organizers", () => HttpResponse.json([])),
+
+  msw.get("/api/auditories", () => HttpResponse.json([])),
 ];

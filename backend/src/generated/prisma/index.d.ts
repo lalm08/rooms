@@ -4402,46 +4402,94 @@ export namespace Prisma {
 
   export type BookingMinAggregateOutputType = {
     id: string | null
-    deviceId: string | null
     auditoryId: string | null
+    deviceId: string | null
+    title: string | null
+    organizer: string | null
+    organizerEmail: string | null
+    note: string | null
+    startAt: Date | null
+    endAt: Date | null
+    status: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type BookingMaxAggregateOutputType = {
     id: string | null
-    deviceId: string | null
     auditoryId: string | null
+    deviceId: string | null
+    title: string | null
+    organizer: string | null
+    organizerEmail: string | null
+    note: string | null
+    startAt: Date | null
+    endAt: Date | null
+    status: string | null
     createdAt: Date | null
+    updatedAt: Date | null
   }
 
   export type BookingCountAggregateOutputType = {
     id: number
-    deviceId: number
     auditoryId: number
+    deviceId: number
+    title: number
+    organizer: number
+    organizerEmail: number
+    note: number
+    startAt: number
+    endAt: number
+    status: number
     createdAt: number
+    updatedAt: number
     _all: number
   }
 
 
   export type BookingMinAggregateInputType = {
     id?: true
-    deviceId?: true
     auditoryId?: true
+    deviceId?: true
+    title?: true
+    organizer?: true
+    organizerEmail?: true
+    note?: true
+    startAt?: true
+    endAt?: true
+    status?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type BookingMaxAggregateInputType = {
     id?: true
-    deviceId?: true
     auditoryId?: true
+    deviceId?: true
+    title?: true
+    organizer?: true
+    organizerEmail?: true
+    note?: true
+    startAt?: true
+    endAt?: true
+    status?: true
     createdAt?: true
+    updatedAt?: true
   }
 
   export type BookingCountAggregateInputType = {
     id?: true
-    deviceId?: true
     auditoryId?: true
+    deviceId?: true
+    title?: true
+    organizer?: true
+    organizerEmail?: true
+    note?: true
+    startAt?: true
+    endAt?: true
+    status?: true
     createdAt?: true
+    updatedAt?: true
     _all?: true
   }
 
@@ -4519,9 +4567,17 @@ export namespace Prisma {
 
   export type BookingGroupByOutputType = {
     id: string
-    deviceId: string
     auditoryId: string
+    deviceId: string | null
+    title: string
+    organizer: string
+    organizerEmail: string
+    note: string | null
+    startAt: Date
+    endAt: Date
+    status: string
     createdAt: Date
+    updatedAt: Date
     _count: BookingCountAggregateOutputType | null
     _min: BookingMinAggregateOutputType | null
     _max: BookingMaxAggregateOutputType | null
@@ -4543,63 +4599,103 @@ export namespace Prisma {
 
   export type BookingSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    deviceId?: boolean
     auditoryId?: boolean
+    deviceId?: boolean
+    title?: boolean
+    organizer?: boolean
+    organizerEmail?: boolean
+    note?: boolean
+    startAt?: boolean
+    endAt?: boolean
+    status?: boolean
     createdAt?: boolean
-    device?: boolean | DeviceDefaultArgs<ExtArgs>
+    updatedAt?: boolean
+    device?: boolean | Booking$deviceArgs<ExtArgs>
     auditory?: boolean | AuditoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["booking"]>
 
   export type BookingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    deviceId?: boolean
     auditoryId?: boolean
+    deviceId?: boolean
+    title?: boolean
+    organizer?: boolean
+    organizerEmail?: boolean
+    note?: boolean
+    startAt?: boolean
+    endAt?: boolean
+    status?: boolean
     createdAt?: boolean
-    device?: boolean | DeviceDefaultArgs<ExtArgs>
+    updatedAt?: boolean
+    device?: boolean | Booking$deviceArgs<ExtArgs>
     auditory?: boolean | AuditoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["booking"]>
 
   export type BookingSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    deviceId?: boolean
     auditoryId?: boolean
+    deviceId?: boolean
+    title?: boolean
+    organizer?: boolean
+    organizerEmail?: boolean
+    note?: boolean
+    startAt?: boolean
+    endAt?: boolean
+    status?: boolean
     createdAt?: boolean
-    device?: boolean | DeviceDefaultArgs<ExtArgs>
+    updatedAt?: boolean
+    device?: boolean | Booking$deviceArgs<ExtArgs>
     auditory?: boolean | AuditoryDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["booking"]>
 
   export type BookingSelectScalar = {
     id?: boolean
-    deviceId?: boolean
     auditoryId?: boolean
+    deviceId?: boolean
+    title?: boolean
+    organizer?: boolean
+    organizerEmail?: boolean
+    note?: boolean
+    startAt?: boolean
+    endAt?: boolean
+    status?: boolean
     createdAt?: boolean
+    updatedAt?: boolean
   }
 
-  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "deviceId" | "auditoryId" | "createdAt", ExtArgs["result"]["booking"]>
+  export type BookingOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "auditoryId" | "deviceId" | "title" | "organizer" | "organizerEmail" | "note" | "startAt" | "endAt" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["booking"]>
   export type BookingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    device?: boolean | DeviceDefaultArgs<ExtArgs>
+    device?: boolean | Booking$deviceArgs<ExtArgs>
     auditory?: boolean | AuditoryDefaultArgs<ExtArgs>
   }
   export type BookingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    device?: boolean | DeviceDefaultArgs<ExtArgs>
+    device?: boolean | Booking$deviceArgs<ExtArgs>
     auditory?: boolean | AuditoryDefaultArgs<ExtArgs>
   }
   export type BookingIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    device?: boolean | DeviceDefaultArgs<ExtArgs>
+    device?: boolean | Booking$deviceArgs<ExtArgs>
     auditory?: boolean | AuditoryDefaultArgs<ExtArgs>
   }
 
   export type $BookingPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Booking"
     objects: {
-      device: Prisma.$DevicePayload<ExtArgs>
+      device: Prisma.$DevicePayload<ExtArgs> | null
       auditory: Prisma.$AuditoryPayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      deviceId: string
       auditoryId: string
+      deviceId: string | null
+      title: string
+      organizer: string
+      organizerEmail: string
+      note: string | null
+      startAt: Date
+      endAt: Date
+      status: string
       createdAt: Date
+      updatedAt: Date
     }, ExtArgs["result"]["booking"]>
     composites: {}
   }
@@ -4994,7 +5090,7 @@ export namespace Prisma {
    */
   export interface Prisma__BookingClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    device<T extends DeviceDefaultArgs<ExtArgs> = {}>(args?: Subset<T, DeviceDefaultArgs<ExtArgs>>): Prisma__DeviceClient<$Result.GetResult<Prisma.$DevicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    device<T extends Booking$deviceArgs<ExtArgs> = {}>(args?: Subset<T, Booking$deviceArgs<ExtArgs>>): Prisma__DeviceClient<$Result.GetResult<Prisma.$DevicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     auditory<T extends AuditoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AuditoryDefaultArgs<ExtArgs>>): Prisma__AuditoryClient<$Result.GetResult<Prisma.$AuditoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -5026,9 +5122,17 @@ export namespace Prisma {
    */
   interface BookingFieldRefs {
     readonly id: FieldRef<"Booking", 'String'>
-    readonly deviceId: FieldRef<"Booking", 'String'>
     readonly auditoryId: FieldRef<"Booking", 'String'>
+    readonly deviceId: FieldRef<"Booking", 'String'>
+    readonly title: FieldRef<"Booking", 'String'>
+    readonly organizer: FieldRef<"Booking", 'String'>
+    readonly organizerEmail: FieldRef<"Booking", 'String'>
+    readonly note: FieldRef<"Booking", 'String'>
+    readonly startAt: FieldRef<"Booking", 'DateTime'>
+    readonly endAt: FieldRef<"Booking", 'DateTime'>
+    readonly status: FieldRef<"Booking", 'String'>
     readonly createdAt: FieldRef<"Booking", 'DateTime'>
+    readonly updatedAt: FieldRef<"Booking", 'DateTime'>
   }
     
 
@@ -5425,6 +5529,25 @@ export namespace Prisma {
   }
 
   /**
+   * Booking.device
+   */
+  export type Booking$deviceArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Device
+     */
+    select?: DeviceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Device
+     */
+    omit?: DeviceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: DeviceInclude<ExtArgs> | null
+    where?: DeviceWhereInput
+  }
+
+  /**
    * Booking without action
    */
   export type BookingDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5494,9 +5617,17 @@ export namespace Prisma {
 
   export const BookingScalarFieldEnum: {
     id: 'id',
-    deviceId: 'deviceId',
     auditoryId: 'auditoryId',
-    createdAt: 'createdAt'
+    deviceId: 'deviceId',
+    title: 'title',
+    organizer: 'organizer',
+    organizerEmail: 'organizerEmail',
+    note: 'note',
+    startAt: 'startAt',
+    endAt: 'endAt',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
   };
 
   export type BookingScalarFieldEnum = (typeof BookingScalarFieldEnum)[keyof typeof BookingScalarFieldEnum]
@@ -5769,18 +5900,34 @@ export namespace Prisma {
     OR?: BookingWhereInput[]
     NOT?: BookingWhereInput | BookingWhereInput[]
     id?: StringFilter<"Booking"> | string
-    deviceId?: StringFilter<"Booking"> | string
     auditoryId?: StringFilter<"Booking"> | string
+    deviceId?: StringNullableFilter<"Booking"> | string | null
+    title?: StringFilter<"Booking"> | string
+    organizer?: StringFilter<"Booking"> | string
+    organizerEmail?: StringFilter<"Booking"> | string
+    note?: StringNullableFilter<"Booking"> | string | null
+    startAt?: DateTimeFilter<"Booking"> | Date | string
+    endAt?: DateTimeFilter<"Booking"> | Date | string
+    status?: StringFilter<"Booking"> | string
     createdAt?: DateTimeFilter<"Booking"> | Date | string
-    device?: XOR<DeviceScalarRelationFilter, DeviceWhereInput>
+    updatedAt?: DateTimeFilter<"Booking"> | Date | string
+    device?: XOR<DeviceNullableScalarRelationFilter, DeviceWhereInput> | null
     auditory?: XOR<AuditoryScalarRelationFilter, AuditoryWhereInput>
   }
 
   export type BookingOrderByWithRelationInput = {
     id?: SortOrder
-    deviceId?: SortOrder
     auditoryId?: SortOrder
+    deviceId?: SortOrderInput | SortOrder
+    title?: SortOrder
+    organizer?: SortOrder
+    organizerEmail?: SortOrder
+    note?: SortOrderInput | SortOrder
+    startAt?: SortOrder
+    endAt?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     device?: DeviceOrderByWithRelationInput
     auditory?: AuditoryOrderByWithRelationInput
   }
@@ -5790,18 +5937,34 @@ export namespace Prisma {
     AND?: BookingWhereInput | BookingWhereInput[]
     OR?: BookingWhereInput[]
     NOT?: BookingWhereInput | BookingWhereInput[]
-    deviceId?: StringFilter<"Booking"> | string
     auditoryId?: StringFilter<"Booking"> | string
+    deviceId?: StringNullableFilter<"Booking"> | string | null
+    title?: StringFilter<"Booking"> | string
+    organizer?: StringFilter<"Booking"> | string
+    organizerEmail?: StringFilter<"Booking"> | string
+    note?: StringNullableFilter<"Booking"> | string | null
+    startAt?: DateTimeFilter<"Booking"> | Date | string
+    endAt?: DateTimeFilter<"Booking"> | Date | string
+    status?: StringFilter<"Booking"> | string
     createdAt?: DateTimeFilter<"Booking"> | Date | string
-    device?: XOR<DeviceScalarRelationFilter, DeviceWhereInput>
+    updatedAt?: DateTimeFilter<"Booking"> | Date | string
+    device?: XOR<DeviceNullableScalarRelationFilter, DeviceWhereInput> | null
     auditory?: XOR<AuditoryScalarRelationFilter, AuditoryWhereInput>
   }, "id">
 
   export type BookingOrderByWithAggregationInput = {
     id?: SortOrder
-    deviceId?: SortOrder
     auditoryId?: SortOrder
+    deviceId?: SortOrderInput | SortOrder
+    title?: SortOrder
+    organizer?: SortOrder
+    organizerEmail?: SortOrder
+    note?: SortOrderInput | SortOrder
+    startAt?: SortOrder
+    endAt?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
     _count?: BookingCountOrderByAggregateInput
     _max?: BookingMaxOrderByAggregateInput
     _min?: BookingMinOrderByAggregateInput
@@ -5812,9 +5975,17 @@ export namespace Prisma {
     OR?: BookingScalarWhereWithAggregatesInput[]
     NOT?: BookingScalarWhereWithAggregatesInput | BookingScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Booking"> | string
-    deviceId?: StringWithAggregatesFilter<"Booking"> | string
     auditoryId?: StringWithAggregatesFilter<"Booking"> | string
+    deviceId?: StringNullableWithAggregatesFilter<"Booking"> | string | null
+    title?: StringWithAggregatesFilter<"Booking"> | string
+    organizer?: StringWithAggregatesFilter<"Booking"> | string
+    organizerEmail?: StringWithAggregatesFilter<"Booking"> | string
+    note?: StringNullableWithAggregatesFilter<"Booking"> | string | null
+    startAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
+    endAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
+    status?: StringWithAggregatesFilter<"Booking"> | string
     createdAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Booking"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -5907,7 +6078,7 @@ export namespace Prisma {
 
   export type AuditoryCreateInput = {
     id?: string
-    code: string
+    code?: string
     name: string
     description?: string | null
     capacity?: number
@@ -5922,7 +6093,7 @@ export namespace Prisma {
 
   export type AuditoryUncheckedCreateInput = {
     id?: string
-    code: string
+    code?: string
     name: string
     description?: string | null
     capacity?: number
@@ -5967,7 +6138,7 @@ export namespace Prisma {
 
   export type AuditoryCreateManyInput = {
     id?: string
-    code: string
+    code?: string
     name: string
     description?: string | null
     capacity?: number
@@ -6009,49 +6180,105 @@ export namespace Prisma {
 
   export type BookingCreateInput = {
     id?: string
+    title?: string
+    organizer?: string
+    organizerEmail?: string
+    note?: string | null
+    startAt?: Date | string
+    endAt?: Date | string
+    status?: string
     createdAt?: Date | string
-    device: DeviceCreateNestedOneWithoutBookingsInput
+    updatedAt?: Date | string
+    device?: DeviceCreateNestedOneWithoutBookingsInput
     auditory: AuditoryCreateNestedOneWithoutBookingsInput
   }
 
   export type BookingUncheckedCreateInput = {
     id?: string
-    deviceId: string
     auditoryId: string
+    deviceId?: string | null
+    title?: string
+    organizer?: string
+    organizerEmail?: string
+    note?: string | null
+    startAt?: Date | string
+    endAt?: Date | string
+    status?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type BookingUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    organizer?: StringFieldUpdateOperationsInput | string
+    organizerEmail?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    startAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    device?: DeviceUpdateOneRequiredWithoutBookingsNestedInput
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    device?: DeviceUpdateOneWithoutBookingsNestedInput
     auditory?: AuditoryUpdateOneRequiredWithoutBookingsNestedInput
   }
 
   export type BookingUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    deviceId?: StringFieldUpdateOperationsInput | string
     auditoryId?: StringFieldUpdateOperationsInput | string
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    organizer?: StringFieldUpdateOperationsInput | string
+    organizerEmail?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    startAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BookingCreateManyInput = {
     id?: string
-    deviceId: string
     auditoryId: string
+    deviceId?: string | null
+    title?: string
+    organizer?: string
+    organizerEmail?: string
+    note?: string | null
+    startAt?: Date | string
+    endAt?: Date | string
+    status?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type BookingUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    organizer?: StringFieldUpdateOperationsInput | string
+    organizerEmail?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    startAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BookingUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    deviceId?: StringFieldUpdateOperationsInput | string
     auditoryId?: StringFieldUpdateOperationsInput | string
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    organizer?: StringFieldUpdateOperationsInput | string
+    organizerEmail?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    startAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -6281,9 +6508,9 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
-  export type DeviceScalarRelationFilter = {
-    is?: DeviceWhereInput
-    isNot?: DeviceWhereInput
+  export type DeviceNullableScalarRelationFilter = {
+    is?: DeviceWhereInput | null
+    isNot?: DeviceWhereInput | null
   }
 
   export type AuditoryScalarRelationFilter = {
@@ -6293,23 +6520,47 @@ export namespace Prisma {
 
   export type BookingCountOrderByAggregateInput = {
     id?: SortOrder
-    deviceId?: SortOrder
     auditoryId?: SortOrder
+    deviceId?: SortOrder
+    title?: SortOrder
+    organizer?: SortOrder
+    organizerEmail?: SortOrder
+    note?: SortOrder
+    startAt?: SortOrder
+    endAt?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type BookingMaxOrderByAggregateInput = {
     id?: SortOrder
-    deviceId?: SortOrder
     auditoryId?: SortOrder
+    deviceId?: SortOrder
+    title?: SortOrder
+    organizer?: SortOrder
+    organizerEmail?: SortOrder
+    note?: SortOrder
+    startAt?: SortOrder
+    endAt?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type BookingMinOrderByAggregateInput = {
     id?: SortOrder
-    deviceId?: SortOrder
     auditoryId?: SortOrder
+    deviceId?: SortOrder
+    title?: SortOrder
+    organizer?: SortOrder
+    organizerEmail?: SortOrder
+    note?: SortOrder
+    startAt?: SortOrder
+    endAt?: SortOrder
+    status?: SortOrder
     createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -6437,10 +6688,12 @@ export namespace Prisma {
     connect?: AuditoryWhereUniqueInput
   }
 
-  export type DeviceUpdateOneRequiredWithoutBookingsNestedInput = {
+  export type DeviceUpdateOneWithoutBookingsNestedInput = {
     create?: XOR<DeviceCreateWithoutBookingsInput, DeviceUncheckedCreateWithoutBookingsInput>
     connectOrCreate?: DeviceCreateOrConnectWithoutBookingsInput
     upsert?: DeviceUpsertWithoutBookingsInput
+    disconnect?: DeviceWhereInput | boolean
+    delete?: DeviceWhereInput | boolean
     connect?: DeviceWhereUniqueInput
     update?: XOR<XOR<DeviceUpdateToOneWithWhereWithoutBookingsInput, DeviceUpdateWithoutBookingsInput>, DeviceUncheckedUpdateWithoutBookingsInput>
   }
@@ -6591,14 +6844,30 @@ export namespace Prisma {
 
   export type BookingCreateWithoutDeviceInput = {
     id?: string
+    title?: string
+    organizer?: string
+    organizerEmail?: string
+    note?: string | null
+    startAt?: Date | string
+    endAt?: Date | string
+    status?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
     auditory: AuditoryCreateNestedOneWithoutBookingsInput
   }
 
   export type BookingUncheckedCreateWithoutDeviceInput = {
     id?: string
     auditoryId: string
+    title?: string
+    organizer?: string
+    organizerEmail?: string
+    note?: string | null
+    startAt?: Date | string
+    endAt?: Date | string
+    status?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type BookingCreateOrConnectWithoutDeviceInput = {
@@ -6632,21 +6901,45 @@ export namespace Prisma {
     OR?: BookingScalarWhereInput[]
     NOT?: BookingScalarWhereInput | BookingScalarWhereInput[]
     id?: StringFilter<"Booking"> | string
-    deviceId?: StringFilter<"Booking"> | string
     auditoryId?: StringFilter<"Booking"> | string
+    deviceId?: StringNullableFilter<"Booking"> | string | null
+    title?: StringFilter<"Booking"> | string
+    organizer?: StringFilter<"Booking"> | string
+    organizerEmail?: StringFilter<"Booking"> | string
+    note?: StringNullableFilter<"Booking"> | string | null
+    startAt?: DateTimeFilter<"Booking"> | Date | string
+    endAt?: DateTimeFilter<"Booking"> | Date | string
+    status?: StringFilter<"Booking"> | string
     createdAt?: DateTimeFilter<"Booking"> | Date | string
+    updatedAt?: DateTimeFilter<"Booking"> | Date | string
   }
 
   export type BookingCreateWithoutAuditoryInput = {
     id?: string
+    title?: string
+    organizer?: string
+    organizerEmail?: string
+    note?: string | null
+    startAt?: Date | string
+    endAt?: Date | string
+    status?: string
     createdAt?: Date | string
-    device: DeviceCreateNestedOneWithoutBookingsInput
+    updatedAt?: Date | string
+    device?: DeviceCreateNestedOneWithoutBookingsInput
   }
 
   export type BookingUncheckedCreateWithoutAuditoryInput = {
     id?: string
-    deviceId: string
+    deviceId?: string | null
+    title?: string
+    organizer?: string
+    organizerEmail?: string
+    note?: string | null
+    startAt?: Date | string
+    endAt?: Date | string
+    status?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type BookingCreateOrConnectWithoutAuditoryInput = {
@@ -6692,7 +6985,7 @@ export namespace Prisma {
 
   export type AuditoryCreateWithoutBookingsInput = {
     id?: string
-    code: string
+    code?: string
     name: string
     description?: string | null
     capacity?: number
@@ -6706,7 +6999,7 @@ export namespace Prisma {
 
   export type AuditoryUncheckedCreateWithoutBookingsInput = {
     id?: string
-    code: string
+    code?: string
     name: string
     description?: string | null
     capacity?: number
@@ -6786,49 +7079,113 @@ export namespace Prisma {
   export type BookingCreateManyDeviceInput = {
     id?: string
     auditoryId: string
+    title?: string
+    organizer?: string
+    organizerEmail?: string
+    note?: string | null
+    startAt?: Date | string
+    endAt?: Date | string
+    status?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type BookingUpdateWithoutDeviceInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    organizer?: StringFieldUpdateOperationsInput | string
+    organizerEmail?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    startAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     auditory?: AuditoryUpdateOneRequiredWithoutBookingsNestedInput
   }
 
   export type BookingUncheckedUpdateWithoutDeviceInput = {
     id?: StringFieldUpdateOperationsInput | string
     auditoryId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    organizer?: StringFieldUpdateOperationsInput | string
+    organizerEmail?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    startAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BookingUncheckedUpdateManyWithoutDeviceInput = {
     id?: StringFieldUpdateOperationsInput | string
     auditoryId?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    organizer?: StringFieldUpdateOperationsInput | string
+    organizerEmail?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    startAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BookingCreateManyAuditoryInput = {
     id?: string
-    deviceId: string
+    deviceId?: string | null
+    title?: string
+    organizer?: string
+    organizerEmail?: string
+    note?: string | null
+    startAt?: Date | string
+    endAt?: Date | string
+    status?: string
     createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type BookingUpdateWithoutAuditoryInput = {
     id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    organizer?: StringFieldUpdateOperationsInput | string
+    organizerEmail?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    startAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    device?: DeviceUpdateOneRequiredWithoutBookingsNestedInput
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    device?: DeviceUpdateOneWithoutBookingsNestedInput
   }
 
   export type BookingUncheckedUpdateWithoutAuditoryInput = {
     id?: StringFieldUpdateOperationsInput | string
-    deviceId?: StringFieldUpdateOperationsInput | string
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    organizer?: StringFieldUpdateOperationsInput | string
+    organizerEmail?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    startAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type BookingUncheckedUpdateManyWithoutAuditoryInput = {
     id?: StringFieldUpdateOperationsInput | string
-    deviceId?: StringFieldUpdateOperationsInput | string
+    deviceId?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: StringFieldUpdateOperationsInput | string
+    organizer?: StringFieldUpdateOperationsInput | string
+    organizerEmail?: StringFieldUpdateOperationsInput | string
+    note?: NullableStringFieldUpdateOperationsInput | string | null
+    startAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    endAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

@@ -199,9 +199,9 @@ export async function getRecentActivity(prisma: PrismaClient) {
       select: { code: true, name: true, updatedAt: true, createdAt: true },
     }),
     prisma.booking.findMany({
-      orderBy: { createdAt: 'desc' },
+      orderBy: { updatedAt: 'desc' },
       take: 5,
-      include: { auditory: { select: { code: true } }, device: { select: { name: true } } },
+      include: { auditory: { select: { code: true } } },
     }),
   ])
 
@@ -219,10 +219,11 @@ export async function getRecentActivity(prisma: PrismaClient) {
   }
 
   for (const booking of bookings) {
+    const label = booking.title || booking.auditory.code
     events.push({
       type: 'booking',
-      text: `Создано бронирование для аудитории ${booking.auditory.code}`,
-      at: booking.createdAt,
+      text: `Бронирование «${label}» — аудитория ${booking.auditory.code}`,
+      at: booking.updatedAt,
     })
   }
 

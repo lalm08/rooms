@@ -4,6 +4,7 @@ import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
 import prismaPlugin from './plugins/prisma.js';
 import { buildRoomsWhere, getBuildingSchema, getEquipmentOverview, getRecentActivity, getRoomsStats, toRoomDto, } from './lib/rooms.js';
+import { buildBookingsWhere, getBookingOrganizers, getBookingsStats, getOccupancyGrid, getUpcomingBookings, syncAuditoryStatus, toBookingDto, } from './lib/bookings.js';
 import { seedDatabase } from './seed.js';
 const CORS_ORIGINS = [
     'https://lalm08.github.io',
@@ -24,7 +25,14 @@ export async function buildApp() {
     });
     await app.register(rateLimit, { max: 100, timeWindow: '1 minute' });
     await app.register(prismaPlugin);
-    await seedDatabase(app.prisma);
+    app.get('/health', async () => ({ ok: true }));
+    app.get('/', async () => ({ service: 'rooms-api', ok: true }));
+    try {
+        await seedDatabase(app.prisma);
+    }
+    catch (err) {
+        app.log.error(err, 'Seed skipped due to error');
+    }
     // --- Rooms catalog ---
     app.get('/api/rooms', async (req) => {
         const q = req.query;
@@ -140,25 +148,87 @@ export async function buildApp() {
         reply.code(204).send();
     });
     // --- Bookings ---
-    app.get('/api/bookings', async () => app.prisma.booking.findMany({ include: { device: true, auditory: true } }));
-    app.post('/api/bookings', async (req, reply) => {
-        const { deviceId, auditoryId } = req.body;
-        const booking = await app.prisma.booking.create({ data: { deviceId, auditoryId } });
-        await app.prisma.auditory.update({
-            where: { id: auditoryId },
-            data: { status: 'booked' },
+    app.get('/api/bookings', async (req) => {
+        const q = req.query;
+        const page = Math.max(1, Number(q.page ?? 1));
+        const limit = Math.min(100, Math.max(1, Number(q.limit ?? 15)));
+        const where = buildBookingsWhere({
+            page,
+            limit,
+            search: q.search,
+            status: q.status,
+            auditoryId: q.auditoryId,
+            organizer: q.organizer,
+            date: q.date,
         });
+        const [total, items] = await Promise.all([
+            app.prisma.booking.count({ where }),
+            app.prisma.booking.findMany({
+                where,
+                include: { auditory: true, device: true },
+                orderBy: { startAt: 'desc' },
+                skip: (page - 1) * limit,
+                take: limit,
+            }),
+        ]);
+        return {
+            items: items.map(toBookingDto),
+            page,
+            limit,
+            total,
+        };
+    });
+    app.get('/api/bookings/stats', async () => getBookingsStats(app.prisma));
+    app.get('/api/bookings/occupancy', async (req) => {
+        const { date } = req.query;
+        return getOccupancyGrid(app.prisma, date);
+    });
+    app.get('/api/bookings/upcoming', async () => getUpcomingBookings(app.prisma, 3));
+    app.get('/api/bookings/organizers', async () => getBookingOrganizers(app.prisma));
+    app.post('/api/bookings', async (req, reply) => {
+        const body = req.body;
+        const booking = await app.prisma.booking.create({
+            data: {
+                auditoryId: body.auditoryId,
+                deviceId: body.deviceId || null,
+                title: body.title?.trim() ?? '',
+                organizer: body.organizer?.trim() ?? '',
+                organizerEmail: body.organizerEmail?.trim() ?? '',
+                note: body.note?.trim() || null,
+                startAt: new Date(body.startAt),
+                endAt: new Date(body.endAt),
+                status: body.status ?? 'confirmed',
+            },
+            include: { auditory: true, device: true },
+        });
+        await syncAuditoryStatus(app.prisma, body.auditoryId);
         reply.code(201);
-        return booking;
+        return toBookingDto(booking);
     });
     app.put('/api/bookings/:id', async (req, reply) => {
         const { id } = req.params;
-        const { deviceId, auditoryId } = req.body;
+        const body = req.body;
         try {
-            return await app.prisma.booking.update({
+            const prev = await app.prisma.booking.findUnique({ where: { id } });
+            const booking = await app.prisma.booking.update({
                 where: { id },
-                data: { deviceId, auditoryId },
+                data: {
+                    ...(body.auditoryId !== undefined && { auditoryId: body.auditoryId }),
+                    ...(body.deviceId !== undefined && { deviceId: body.deviceId || null }),
+                    ...(body.title !== undefined && { title: body.title.trim() }),
+                    ...(body.organizer !== undefined && { organizer: body.organizer.trim() }),
+                    ...(body.organizerEmail !== undefined && { organizerEmail: body.organizerEmail.trim() }),
+                    ...(body.note !== undefined && { note: body.note?.trim() || null }),
+                    ...(body.startAt !== undefined && { startAt: new Date(body.startAt) }),
+                    ...(body.endAt !== undefined && { endAt: new Date(body.endAt) }),
+                    ...(body.status !== undefined && { status: body.status }),
+                },
+                include: { auditory: true, device: true },
             });
+            if (prev)
+                await syncAuditoryStatus(app.prisma, prev.auditoryId);
+            await syncAuditoryStatus(app.prisma, booking.auditoryId);
+            return toBookingDto(booking);
         }
         catch (error) {
             const message = error instanceof Error ? error.message : 'Unknown error';
@@ -169,15 +239,8 @@ export async function buildApp() {
         const { id } = req.params;
         const booking = await app.prisma.booking.findUnique({ where: { id } });
         await app.prisma.booking.delete({ where: { id } });
-        if (booking) {
-            const other = await app.prisma.booking.count({ where: { auditoryId: booking.auditoryId } });
-            if (other === 0) {
-                await app.prisma.auditory.update({
-                    where: { id: booking.auditoryId },
-                    data: { status: 'available' },
-                });
-            }
-        }
+        if (booking)
+            await syncAuditoryStatus(app.prisma, booking.auditoryId);
         reply.code(204).send();
     });
     return app;

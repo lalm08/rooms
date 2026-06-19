@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import { Header } from "./components/Header";
 import { RoomsCatalogPage } from "./components/RoomsCatalog/RoomsCatalogPage";
 import { SettingsPage } from "./pages/SettingsPage";
-import { BookingsPlaceholder } from "./pages/BookingsPlaceholder";
+import { BookingsPage } from "./components/Bookings/BookingsPage";
 
 type NavId = "catalog" | "bookings" | "settings";
 
@@ -30,7 +30,7 @@ export default function App() {
         </Box>
       )}
 
-      {activeNav === "bookings" && <BookingsPlaceholder />}
+      {activeNav === "bookings" && <BookingsPage />}
 
       {activeNav === "settings" && (
         <SettingsPage initialTab={settingsTab} onTabChange={setSettingsTab} />
