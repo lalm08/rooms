@@ -1,0 +1,80 @@
+.settings-page {
+  padding-top: 8px;
+}
+
+.settings-table-panel {
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  background: #fff;
+}
+
+.settings-table-panel .MuiTableCell-root {
+  padding: 14px 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.settings-table-panel .MuiTableHead-root .MuiTableCell-root {
+  background: #f8fafc;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.settings-form-panel {
+  padding: 20px 24px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  margin-bottom: 20px;
+}
+
+.settings-equip-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.settings-equip-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.settings-equip-chip:hover {
+  border-color: #cbd5e1;
+  background: #f8fafc;
+}
+
+.settings-equip-chip.selected {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+.settings-equip-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.settings-mini-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  margin: 2px 4px 2px 0;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  background: #f1f5f9;
+  color: #475569;
+}

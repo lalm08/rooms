@@ -27,6 +27,10 @@ const EQUIP_LABEL: Record<string, string> = {
   video: "Видеосвязь",
 };
 
+function equipLabel(key: string) {
+  return EQUIP_LABEL[key] ?? key;
+}
+
 type Props = {
   filters: RoomsFilters;
 };
@@ -151,7 +155,7 @@ export function RoomsTable({ filters }: Props) {
                     <div className="equip-pills">
                       {r.equipment.map((k) => (
                         <span key={k} className={`equip-pill ${k}`}>
-                          {EQUIP_LABEL[k] ?? k}
+                          {equipLabel(k)}
                         </span>
                       ))}
                     </div>
